@@ -1,6 +1,6 @@
 # ClonOr_cpp
 
-Clonal Origin program with multiple AIS for faster inference of homologous recombination in bacteria.
+Clonal Origin program with multiple AIS for faster inference of homologous recombination in bacteria. This work is based on previous work: https://github.com/xavierdidelot/ClonalOrigin. 
 
 HOW TO RUN IN XCODE USING CPP FILES ONLY
 
