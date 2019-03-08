@@ -7,7 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9042B95C22329B0200629824 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B95B22329B0200629824 /* main.cpp */; };
+		9042B99B22329B2C00629824 /* data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96322329B2400629824 /* data.cpp */; };
+		9042B99C22329B2C00629824 /* metropolis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96522329B2400629824 /* metropolis.cpp */; };
+		9042B99D22329B2C00629824 /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96722329B2500629824 /* node.cpp */; };
+		9042B99E22329B2C00629824 /* moveaddedge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96B22329B2500629824 /* moveaddedge.cpp */; };
+		9042B99F22329B2C00629824 /* movesitechange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96C22329B2500629824 /* movesitechange.cpp */; };
+		9042B9A022329B2C00629824 /* move.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96D22329B2500629824 /* move.cpp */; };
+		9042B9A122329B2C00629824 /* moveregraftclonal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96E22329B2500629824 /* moveregraftclonal.cpp */; };
+		9042B9A222329B2C00629824 /* recedge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96F22329B2500629824 /* recedge.cpp */; };
+		9042B9A322329B2C00629824 /* moveaddedgeAIS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97122329B2500629824 /* moveaddedgeAIS.cpp */; };
+		9042B9A422329B2C00629824 /* wargxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97722329B2600629824 /* wargxml.cpp */; };
+		9042B9A522329B2C00629824 /* movegreedytree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97922329B2600629824 /* movegreedytree.cpp */; };
+		9042B9A622329B2C00629824 /* moveremedgeAIS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97A22329B2600629824 /* moveremedgeAIS.cpp */; };
+		9042B9A722329B2C00629824 /* movedelta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97B22329B2700629824 /* movedelta.cpp */; };
+		9042B9A822329B2C00629824 /* mpiutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97C22329B2700629824 /* mpiutils.cpp */; };
+		9042B9A922329B2C00629824 /* moveremedge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B97D22329B2700629824 /* moveremedge.cpp */; };
+		9042B9AA22329B2C00629824 /* weakarg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B98222329B2800629824 /* weakarg.cpp */; };
+		9042B9AB22329B2C00629824 /* movetimechange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B98522329B2800629824 /* movetimechange.cpp */; };
+		9042B9AC22329B2C00629824 /* moveageclonal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B98A22329B2900629824 /* moveageclonal.cpp */; };
+		9042B9AD22329B2C00629824 /* tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B98B22329B2900629824 /* tree.cpp */; };
+		9042B9AE22329B2C00629824 /* param.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B98C22329B2A00629824 /* param.cpp */; };
+		9042B9AF22329B2C00629824 /* moveaddedgeMAIS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B98E22329B2A00629824 /* moveaddedgeMAIS.cpp */; };
+		9042B9B022329B2C00629824 /* moverho.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99322329B2A00629824 /* moverho.cpp */; };
+		9042B9B122329B2C00629824 /* rectree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99522329B2B00629824 /* rectree.cpp */; };
+		9042B9B222329B2C00629824 /* movetheta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99622329B2B00629824 /* movetheta.cpp */; };
+		9042B9B322329B2C00629824 /* movescaletree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99722329B2B00629824 /* movescaletree.cpp */; };
+		9042B9B422329B2C00629824 /* rng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99822329B2B00629824 /* rng.cpp */; };
+		9042B9B522329B2C00629824 /* moveedgechange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99A22329B2B00629824 /* moveedgechange.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +50,63 @@
 
 /* Begin PBXFileReference section */
 		9042B95822329B0200629824 /* ClonOr_cpp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ClonOr_cpp; sourceTree = BUILT_PRODUCTS_DIR; };
-		9042B95B22329B0200629824 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		9042B96222329B2400629824 /* movedelta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movedelta.h; sourceTree = "<group>"; };
+		9042B96322329B2400629824 /* data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = data.cpp; sourceTree = "<group>"; };
+		9042B96422329B2400629824 /* moveremedge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveremedge.h; sourceTree = "<group>"; };
+		9042B96522329B2400629824 /* metropolis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = metropolis.cpp; sourceTree = "<group>"; };
+		9042B96622329B2500629824 /* moveremedgeAIS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveremedgeAIS.h; sourceTree = "<group>"; };
+		9042B96722329B2500629824 /* node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
+		9042B96822329B2500629824 /* moveregraftclonal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveregraftclonal.h; sourceTree = "<group>"; };
+		9042B96922329B2500629824 /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
+		9042B96A22329B2500629824 /* movegreedytree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movegreedytree.h; sourceTree = "<group>"; };
+		9042B96B22329B2500629824 /* moveaddedge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveaddedge.cpp; sourceTree = "<group>"; };
+		9042B96C22329B2500629824 /* movesitechange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movesitechange.cpp; sourceTree = "<group>"; };
+		9042B96D22329B2500629824 /* move.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = move.cpp; sourceTree = "<group>"; };
+		9042B96E22329B2500629824 /* moveregraftclonal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveregraftclonal.cpp; sourceTree = "<group>"; };
+		9042B96F22329B2500629824 /* recedge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = recedge.cpp; sourceTree = "<group>"; };
+		9042B97022329B2500629824 /* movesitechange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movesitechange.h; sourceTree = "<group>"; };
+		9042B97122329B2500629824 /* moveaddedgeAIS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveaddedgeAIS.cpp; sourceTree = "<group>"; };
+		9042B97222329B2600629824 /* moveaddedgeMAIS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveaddedgeMAIS.h; sourceTree = "<group>"; };
+		9042B97322329B2600629824 /* movetheta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movetheta.h; sourceTree = "<group>"; };
+		9042B97422329B2600629824 /* wargxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wargxml.h; sourceTree = "<group>"; };
+		9042B97522329B2600629824 /* moveageclonal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveageclonal.h; sourceTree = "<group>"; };
+		9042B97622329B2600629824 /* data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data.h; sourceTree = "<group>"; };
+		9042B97722329B2600629824 /* wargxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wargxml.cpp; sourceTree = "<group>"; };
+		9042B97822329B2600629824 /* moveedgechange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveedgechange.h; sourceTree = "<group>"; };
+		9042B97922329B2600629824 /* movegreedytree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movegreedytree.cpp; sourceTree = "<group>"; };
+		9042B97A22329B2600629824 /* moveremedgeAIS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveremedgeAIS.cpp; sourceTree = "<group>"; };
+		9042B97B22329B2700629824 /* movedelta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movedelta.cpp; sourceTree = "<group>"; };
+		9042B97C22329B2700629824 /* mpiutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpiutils.cpp; sourceTree = "<group>"; };
+		9042B97D22329B2700629824 /* moveremedge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveremedge.cpp; sourceTree = "<group>"; };
+		9042B97E22329B2700629824 /* metropolis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = metropolis.h; sourceTree = "<group>"; };
+		9042B97F22329B2700629824 /* move.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = move.h; sourceTree = "<group>"; };
+		9042B98022329B2700629824 /* mpiutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpiutils.h; sourceTree = "<group>"; };
+		9042B98122329B2800629824 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		9042B98222329B2800629824 /* weakarg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = weakarg.cpp; sourceTree = "<group>"; };
+		9042B98322329B2800629824 /* moverho.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moverho.h; sourceTree = "<group>"; };
+		9042B98422329B2800629824 /* recedge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = recedge.h; sourceTree = "<group>"; };
+		9042B98522329B2800629824 /* movetimechange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movetimechange.cpp; sourceTree = "<group>"; };
+		9042B98622329B2900629824 /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = node.h; sourceTree = "<group>"; };
+		9042B98722329B2900629824 /* rng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rng.h; sourceTree = "<group>"; };
+		9042B98822329B2900629824 /* moveaddedgeAIS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveaddedgeAIS.h; sourceTree = "<group>"; };
+		9042B98922329B2900629824 /* rectree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rectree.h; sourceTree = "<group>"; };
+		9042B98A22329B2900629824 /* moveageclonal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveageclonal.cpp; sourceTree = "<group>"; };
+		9042B98B22329B2900629824 /* tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tree.cpp; sourceTree = "<group>"; };
+		9042B98C22329B2A00629824 /* param.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = param.cpp; sourceTree = "<group>"; };
+		9042B98D22329B2A00629824 /* param.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = param.h; sourceTree = "<group>"; };
+		9042B98E22329B2A00629824 /* moveaddedgeMAIS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveaddedgeMAIS.cpp; sourceTree = "<group>"; };
+		9042B98F22329B2A00629824 /* movetimechange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movetimechange.h; sourceTree = "<group>"; };
+		9042B99022329B2A00629824 /* moveaddedge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveaddedge.h; sourceTree = "<group>"; };
+		9042B99122329B2A00629824 /* movescaletree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movescaletree.h; sourceTree = "<group>"; };
+		9042B99222329B2A00629824 /* exponential.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exponential.h; sourceTree = "<group>"; };
+		9042B99322329B2A00629824 /* moverho.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moverho.cpp; sourceTree = "<group>"; };
+		9042B99422329B2B00629824 /* weakarg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = weakarg.h; sourceTree = "<group>"; };
+		9042B99522329B2B00629824 /* rectree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rectree.cpp; sourceTree = "<group>"; };
+		9042B99622329B2B00629824 /* movetheta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movetheta.cpp; sourceTree = "<group>"; };
+		9042B99722329B2B00629824 /* movescaletree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movescaletree.cpp; sourceTree = "<group>"; };
+		9042B99822329B2B00629824 /* rng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rng.cpp; sourceTree = "<group>"; };
+		9042B99922329B2B00629824 /* slotallocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = slotallocator.h; sourceTree = "<group>"; };
+		9042B99A22329B2B00629824 /* moveedgechange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveedgechange.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +139,63 @@
 		9042B95A22329B0200629824 /* ClonOr_cpp */ = {
 			isa = PBXGroup;
 			children = (
-				9042B95B22329B0200629824 /* main.cpp */,
+				9042B98122329B2800629824 /* config.h */,
+				9042B96322329B2400629824 /* data.cpp */,
+				9042B97622329B2600629824 /* data.h */,
+				9042B99222329B2A00629824 /* exponential.h */,
+				9042B96522329B2400629824 /* metropolis.cpp */,
+				9042B97E22329B2700629824 /* metropolis.h */,
+				9042B96D22329B2500629824 /* move.cpp */,
+				9042B97F22329B2700629824 /* move.h */,
+				9042B96B22329B2500629824 /* moveaddedge.cpp */,
+				9042B99022329B2A00629824 /* moveaddedge.h */,
+				9042B97122329B2500629824 /* moveaddedgeAIS.cpp */,
+				9042B98822329B2900629824 /* moveaddedgeAIS.h */,
+				9042B98E22329B2A00629824 /* moveaddedgeMAIS.cpp */,
+				9042B97222329B2600629824 /* moveaddedgeMAIS.h */,
+				9042B98A22329B2900629824 /* moveageclonal.cpp */,
+				9042B97522329B2600629824 /* moveageclonal.h */,
+				9042B97B22329B2700629824 /* movedelta.cpp */,
+				9042B96222329B2400629824 /* movedelta.h */,
+				9042B99A22329B2B00629824 /* moveedgechange.cpp */,
+				9042B97822329B2600629824 /* moveedgechange.h */,
+				9042B97922329B2600629824 /* movegreedytree.cpp */,
+				9042B96A22329B2500629824 /* movegreedytree.h */,
+				9042B96E22329B2500629824 /* moveregraftclonal.cpp */,
+				9042B96822329B2500629824 /* moveregraftclonal.h */,
+				9042B97D22329B2700629824 /* moveremedge.cpp */,
+				9042B96422329B2400629824 /* moveremedge.h */,
+				9042B97A22329B2600629824 /* moveremedgeAIS.cpp */,
+				9042B96622329B2500629824 /* moveremedgeAIS.h */,
+				9042B99322329B2A00629824 /* moverho.cpp */,
+				9042B98322329B2800629824 /* moverho.h */,
+				9042B99722329B2B00629824 /* movescaletree.cpp */,
+				9042B99122329B2A00629824 /* movescaletree.h */,
+				9042B96C22329B2500629824 /* movesitechange.cpp */,
+				9042B97022329B2500629824 /* movesitechange.h */,
+				9042B99622329B2B00629824 /* movetheta.cpp */,
+				9042B97322329B2600629824 /* movetheta.h */,
+				9042B98522329B2800629824 /* movetimechange.cpp */,
+				9042B98F22329B2A00629824 /* movetimechange.h */,
+				9042B97C22329B2700629824 /* mpiutils.cpp */,
+				9042B98022329B2700629824 /* mpiutils.h */,
+				9042B96722329B2500629824 /* node.cpp */,
+				9042B98622329B2900629824 /* node.h */,
+				9042B98C22329B2A00629824 /* param.cpp */,
+				9042B98D22329B2A00629824 /* param.h */,
+				9042B96F22329B2500629824 /* recedge.cpp */,
+				9042B98422329B2800629824 /* recedge.h */,
+				9042B99522329B2B00629824 /* rectree.cpp */,
+				9042B98922329B2900629824 /* rectree.h */,
+				9042B99822329B2B00629824 /* rng.cpp */,
+				9042B98722329B2900629824 /* rng.h */,
+				9042B99922329B2B00629824 /* slotallocator.h */,
+				9042B98B22329B2900629824 /* tree.cpp */,
+				9042B96922329B2500629824 /* tree.h */,
+				9042B97722329B2600629824 /* wargxml.cpp */,
+				9042B97422329B2600629824 /* wargxml.h */,
+				9042B98222329B2800629824 /* weakarg.cpp */,
+				9042B99422329B2B00629824 /* weakarg.h */,
 			);
 			path = ClonOr_cpp;
 			sourceTree = "<group>";
@@ -118,7 +256,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9042B95C22329B0200629824 /* main.cpp in Sources */,
+				9042B9A922329B2C00629824 /* moveremedge.cpp in Sources */,
+				9042B9B522329B2C00629824 /* moveedgechange.cpp in Sources */,
+				9042B99E22329B2C00629824 /* moveaddedge.cpp in Sources */,
+				9042B9A122329B2C00629824 /* moveregraftclonal.cpp in Sources */,
+				9042B9B422329B2C00629824 /* rng.cpp in Sources */,
+				9042B9AF22329B2C00629824 /* moveaddedgeMAIS.cpp in Sources */,
+				9042B9B222329B2C00629824 /* movetheta.cpp in Sources */,
+				9042B9AB22329B2C00629824 /* movetimechange.cpp in Sources */,
+				9042B9B322329B2C00629824 /* movescaletree.cpp in Sources */,
+				9042B99B22329B2C00629824 /* data.cpp in Sources */,
+				9042B99F22329B2C00629824 /* movesitechange.cpp in Sources */,
+				9042B9A022329B2C00629824 /* move.cpp in Sources */,
+				9042B9A522329B2C00629824 /* movegreedytree.cpp in Sources */,
+				9042B9A722329B2C00629824 /* movedelta.cpp in Sources */,
+				9042B99C22329B2C00629824 /* metropolis.cpp in Sources */,
+				9042B9A822329B2C00629824 /* mpiutils.cpp in Sources */,
+				9042B9A322329B2C00629824 /* moveaddedgeAIS.cpp in Sources */,
+				9042B9B122329B2C00629824 /* rectree.cpp in Sources */,
+				9042B9AD22329B2C00629824 /* tree.cpp in Sources */,
+				9042B9AA22329B2C00629824 /* weakarg.cpp in Sources */,
+				9042B9AC22329B2C00629824 /* moveageclonal.cpp in Sources */,
+				9042B9A622329B2C00629824 /* moveremedgeAIS.cpp in Sources */,
+				9042B99D22329B2C00629824 /* node.cpp in Sources */,
+				9042B9A222329B2C00629824 /* recedge.cpp in Sources */,
+				9042B9A422329B2C00629824 /* wargxml.cpp in Sources */,
+				9042B9B022329B2C00629824 /* moverho.cpp in Sources */,
+				9042B9AE22329B2C00629824 /* param.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +402,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				OTHER_LDFLAGS = (
+					"-I/usr/local/include",
+					"-L/usr/local/lib",
+					"-lgsl",
+					"-lgslcblas",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -246,6 +417,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /usr/local/include/;
+				OTHER_LDFLAGS = (
+					"-I/usr/local/include",
+					"-L/usr/local/lib",
+					"-lgsl",
+					"-lgslcblas",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
