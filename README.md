@@ -22,4 +22,4 @@ Running the program with argument -h shows help file with arguments needed. E.g.
 	
 	-a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -A 300 true_tree.nwk simulatedData.xmfa test_T300_fullAIS.xml
 	where
-	-A determines the desired number of annealing steps.
+	-A denotes the desired number of annealing steps.
