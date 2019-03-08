@@ -1,6 +1,6 @@
 # ClonOr_cpp
 
-Clonal Origin program with multiple AIS for faster inference of homologous recombination in bacteria. This work is based on previous work: https://github.com/xavierdidelot/ClonalOrigin. 
+Clonal Origin program with multiple annealed importance sampling (AIS) steps for faster inference of homologous recombination in bacteria. This code is based on previous work: https://github.com/xavierdidelot/ClonalOrigin. Introducing AIS steps into a reversible jump MCMC (rjMCMC) leads to a reduction in asymptotic variance for the chain.
 
 HOW TO RUN IN XCODE USING CPP FILES ONLY
 
