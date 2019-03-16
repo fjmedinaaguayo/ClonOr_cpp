@@ -1,0 +1,264 @@
+library(XML)
+library(xml2)
+library(data.table)
+library(ggplot2)
+library(tidyverse)
+library(ggtree)
+library(parallel)
+library(zoo)
+library(LaplacesDemon)
+library(RColorBrewer)
+
+obtainMeanLevels<-function(recedges){
+  # INPUTS
+  # recedges:
+  #   List containing the recombinations events for each iteration.
+  #   Each element in the list must be a matrix of 6 columns representing
+  #   [site_from,site_to,edge_from,edge_to,time_from,time_to].
+  #
+  # OUTPUTS
+  # vectMeans:
+  #   Vector of average recombination frequency for each site.
+  
+  
+  vectMeans<-rep(0,len_block)
+  
+  # First iteration is not considered.
+  iters<-length(sites[-1])
+  sapply(recedges[-1],function(recedge){
+    
+    if(!is.numeric(recedge))
+       return(-1)
+       
+    r<-matrix(recedge,ncol=6)
+    nRows<-nrow(r)
+    tempVec<-rep(0,len_block)
+    
+    # Multiple recombinations affecting the same site are not treated differently.
+    if(nRows>0)
+      sapply(1:nRows,function(n) tempVec[(r[n,1]):(r[n,2])]<<-1)
+    
+    indOnes<-which(tempVec==1)
+    vectMeans[indOnes]<<-vectMeans[indOnes]+tempVec[indOnes]/iters
+    return(1)
+  })
+  
+  return(vectMeans)
+}
+
+obtainData<-function(name, xmldata, isTruth=F, include_plots=F){
+  # INPUTS
+  # name: name of data used for plots only
+  # xmldata: name of xml file
+  # isTruth: if T the xml file corresponds to the true/simulated recombination.
+  # include_plots: if T the function produces some plots
+  #
+  # OUTPUTS
+  # list(mean_levels, ll, recedges): 
+  #   mean_levels:Vector of average recombination frequency for each site.
+  #   ll: Vector of log-likelihood values for each iteration.
+  #   recedges: list of recombination edges for each iteration. Represented
+  #     as a matrix of 6 colmns representing
+  #     [site_from,site_to,edge_from,edge_to,time_from,time_to].
+ 
+  
+  iterations<-xml_find_all(xmldata,".//Iteration")
+  if(isTruth)
+    recedges<-list(matrix(xml_double(xml_children(xml_children(iterations)[-(1:22)])),ncol=6,byrow = T))
+  else
+    recedges<-lapply(iterations,
+                    function(iter) matrix(xml_double(xml_children(xml_children(iter)[-(1:32)])),ncol=6,byrow = T))
+  num_recedges<-sapply(recedges, function(edge) nrow(edge))
+  mean_tract<-sapply(recedges, function(edge) ifelse(nrow(edge)==0,0,mean(edge[,2]-edge[,1])))
+  
+  sites<-sapply(recedges, function(edge) edge[,1:2])
+  
+  if(isTruth)
+    mean_levels<-numeric(0)
+  else
+    mean_levels<-obtainMeanLevels(recedges)
+  
+  ll<-xml_double(xml_find_all(xmldata,".//ll"))
+  
+  if(include_plots){
+    
+    plot(num_recedges,type="l",main=name)
+    hist(num_recedges, prob=T,main=name)
+    acf(num_recedges,main=name)
+    
+    plot(mean_tract,type="l",main=name)
+    hist(mean_tract,probability = T,main=name)
+    acf(mean_tract,main=name) 
+  }
+  
+  return(list(mean_levels,ll,recedges))
+}
+
+#########################
+
+setwd("../Simulations/")
+
+# PRELIMINARIES AND READING DATA
+# Set length and number of sequences.
+len_block<-1e+4
+num_seq<-10
+# Suffix correspongin to length.
+suffix<-paste0(substr(paste0(len_block),1,2),"K")
+# Preffix corresponding to dataset used.
+preffix<-"Typical"
+# Vector of the different AIS steps to be considered.
+vectAISsteps<-c(1,50,100,200,500,1000)
+vectAISsteps<-c(1,100,1000,5000.1)
+# Read xml files and create data objects using obtainData function.
+vectToRead<-paste0("AIS",vectAISsteps)
+vectObj<-paste0("data_truth_",suffix)
+for(v in vectToRead){
+  
+  name<-paste0(preffix,"_truth_",suffix,".xml")
+  if(!exists(vectObj[1]) || !exists(paste0("recedges_true_",suffix)) || !exists(paste0("sites_true_",suffix))){
+    xml<-read_xml(name)
+    assign(vectObj[1],obtainData(name,xml,T,F))
+    assign(paste0("recedges_true_",suffix),matrix(xml_double(xml_children(xml_find_all(xml,".//recedge"))),ncol=6,byrow = T))
+    assign(paste0("sites_true_",suffix),eval(parse(text=paste0("recedges_true_",suffix,"[,1:2]"))))
+    rm(xml)
+  }
+  
+  name<-paste0(preffix,"_",v,"_",suffix,".xml")
+  nameObj<-paste0("data_",v,"_",suffix)
+  vectObj<-c(vectObj,nameObj)
+  if(!exists(nameObj)){
+    xml<-read_xml(name)
+    assign(nameObj,obtainData(name,xml,F))
+    rm(xml)
+  }
+}
+
+
+# PLOTTING RECOMBINATION FREQUENCY PER SITE
+# Define roll window for smoothing the plots.
+roll_window<-len_block*0.001
+roll_window<-1
+# Read the needed date for the plot.
+vectPlot<-c(parse(text=paste0("sites_true_",suffix,"[,1]")),parse(text=paste0("sites_true_",suffix,"[,2]")))
+for(v in vectObj[-1]){
+  
+  vectPlot<-c(vectPlot,parse(text=paste0(v,"[[1]]")))
+}
+# Define max and min values for plot.
+maxPlot<-max(sapply(vectPlot[-(1:2)], function(v) max(eval(v))))
+minPlot<-min(sapply(vectPlot[-(1:2)], function(v) min(eval(v))))
+# Plot firt data set in black.
+plot(rollmean(eval(vectPlot[-(1:2)][1]),roll_window),type="l",col=alpha("black",1),lwd=2,
+     xlab="site", ylab="recombination frequency", main=NA,
+     ylim=c(minPlot,maxPlot))
+# Plot shaded rectangles indicating where the true recombination events took place.
+rect(eval(vectPlot[1]), 0, eval(vectPlot[2]), 1, col=alpha("gray",0.2), border=NA)
+points(rollmean(eval(vectPlot[-(1:2)][1]),roll_window),type="l",col=alpha("black",1),lwd=2)
+# Define colours for the remaining data sets.
+vectCols<-brewer.pal(5,"Dark2")
+pal<-colorRampPalette(vectCols)
+vectCols<-pal(length(vectPlot[-(1:3)]))
+# Plot remaining data sets.
+for(i in 1:length(vectPlot[-(1:3)])){
+  
+  points(rollmean(eval(vectPlot[-(1:3)][i]),roll_window),col=alpha(vectCols[i],1),type="l",lwd=1.5)
+}
+
+# PLOTTING LOG-LIKE VS ITERATIONS
+# Define how many iterations and actual number of points in the plot.
+lastIters<-1e+5; maxPointsPlot<-1e+4
+vectPlot<-numeric(0)
+vectTotalIters<-numeric(0)
+listIters<-list();
+# Create list with iterations and vector of names to plot.
+for(i in 1:length(vectObj[-1])){
+  
+  v<-vectObj[-1][i]
+  totalIters[i]<-length(eval(parse(text=paste0(v,"[[2]]"))))-1
+  
+  if(lastIters=="All" || totalIters[i]<=lastIters){
+    dataPlot<-paste0(v,"[[2]]")
+    nItersPlot<-totalIters[i]
+  }
+  else{
+    dataPlot<-paste0(v,"[[2]][(totalIters[",i,"]-lastIters+1):(totalIters[",i,"]+1)]")
+    nItersPlot<-lastIters
+  }
+  
+  if(nItersPlot>maxPointsPlot){
+    itersPlot<-(0:maxPointsPlot)*floor((nItersPlot)/maxPointsPlot)+1
+  }
+  else{
+    itersPlot<-(0:nItersPlot)+1
+  }
+  listIters[[i]]<-eval(parse(text="itersPlot"))
+  vectPlot[i]<-parse(text=paste0(dataPlot,"[listIters[[",i,"]]]"))
+}
+# Obtain min max values for plot.
+maxPlot<-max(sapply(1:(length(vectPlot)), function(i) max(eval(vectPlot[i]))))
+minPlot<-min(sapply(1:(length(vectPlot)), function(i) min(eval(vectPlot[i]))))
+# Plot first data set in black.
+plot(listIters[[1]],eval(vectPlot[1]),type="l",xlab="last iterations",ylab="logLikelihood",lwd=2,
+     ylim=c(minPlot,maxPlot))
+# Define colour for remaining data sets.
+vectCols<-brewer.pal(5,"Dark2")
+pal<-colorRampPalette(vectCols)
+vectCols<-pal(length(vectPlot[-1]))
+# Plot remaining datasets.
+for(i in 1:(length(vectPlot[-1]))){
+  
+  lines(listIters[[i+1]],eval(vectPlot[-1][i]),col=alpha(vectCols[i],1),lwd=1.5)
+}
+
+# PLOT INTEGRATED AUTOCORRELATION TIME VS AIS STEPS
+vectIAT<-sapply(vectObj[-1],function(n) IAT(eval(parse(text=paste0(n,"[[2]]")))), USE.NAMES=F)
+rbind(vectAISsteps,vectIAT)
+par(mfrow=c(1,1))
+plot(vectAISsteps,vectIAT,type="b",pch=20)
+plot(vectAISsteps,vectIAT,type="b",pch=20,log="x")
+plot(vectAISsteps,vectIAT,type="b",pch=20,log="xy")
+par(mfrow=c(1,1))
+
+# PLOT AUTOCORRELATION FUNCTIONS FOR DIFFERENT AIS STEPS
+dataACF<-sapply(vectObj[-1], function(v) acf(eval(parse(text=paste0(v,"[[2]]"))),plot=F))
+plot(dataACF[,1]$lag[,1,1],dataACF[,1]$acf[,1,1],type="b",ylim=c(0,1),pch=20,ylab="acf",xlab="lag")
+vectCols<-brewer.pal(5,"Dark2")
+pal<-colorRampPalette(vectCols)
+vectCols<-pal(length(vectObj[-(1:2)]))
+for(i in 1:length(vectObj[-(1:2)])){
+  
+  lines(dataACF[,i+1]$lag[,1,1],dataACF[,i+1]$acf[,1,1],type="b",col=alpha(vectCols[i],1),pch=20)
+}
+
+# PLOTTING RECOMBINATION FREQUENCY PER SITE WITH MORE DETAIL
+# A PLOT FOR EACH edge_from IS CREATED. COULOURS INDICATE DIFFERENT edge_to
+# Compute number of edges.
+numEdges<-2*num_seq-1
+# Define colours for the different edge_to.
+vectCols<-brewer.pal(5,"Dark2")
+pal<-colorRampPalette(vectCols)
+vectCols<-pal(numEdges)
+dataPlot<-data_AIS5000.1_10K[[3]]
+# Define roll window.
+roll_window<-len_block*0.001
+roll_window<-1
+for(efrom in 0:(numEdges-1)){
+  for(eto in 0:(numEdges-1)){
+    
+    # Obtain recedges (as list) that have specific edge_from and edge_to.
+    recs_efrom_eto<-lapply(dataPlot, function(recs) recs[which(recs[,3]==efrom & recs[,4]==eto),] )
+    # Obtain true recedges with specific edge_from and edge_to.
+    true_efrom_to<-matrix(recedges_true_10K[which(recedges_true_10K[,3]==efrom),],ncol=6)
+    # Compute average recombination frequencies.
+    mean_levels<-obtainMeanLevels(recs_efrom_eto)
+    if(eto==0){
+      plot(rollmean(mean_levels,roll_window),type="l",col=alpha(vectCols[eto],0.8),lwd=1.5,
+           ylim=c(0,1),xlab="site",ylab="recombination frequency",main=paste0("efrom=",efrom))
+      # Plot true recombination events as shaded rectangles.
+      if(length(true_efrom_to)>0)
+        rect(true_efrom_to[,1], 0, true_efrom_to[,2], 1, col=alpha("gray",0.2), border=NA)
+    }
+    else
+      points(rollmean(mean_levels,roll_window),type="l",col=alpha(vectCols[eto],0.8),lwd=1.5)
+  }
+}
