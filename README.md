@@ -26,6 +26,6 @@ Running the program with argument -h shows help file with arguments needed. E.g.
 
 
 IN THE CLUSTER: compile cpp files using
-	g++ *.cpp -o <NAME> -lgsl -lgslcblas -lm
+	g++ *.cpp -o "NAME" -lgsl -lgslcblas -lm
 then run
-	./<NAME> -a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -A 300 true_tree.nwk simulatedData.xmfa test.xml
+	./"NAME" -a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -A 300 true_tree.nwk simulatedData.xmfa test.xml
