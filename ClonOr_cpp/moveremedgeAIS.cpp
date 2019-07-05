@@ -15,17 +15,17 @@ namespace weakarg
     MoveRemEdgeAIS::MoveRemEdgeAIS(Param * p,double a)
     : Move(p,a)
     {
-        description= "Update removing a recombinant edge";
+        description= "Update removing a recombinant edge using AISRJ";
         name= "RemEdge";
         
     }
     
-    double MoveRemEdgeAIS::gammaAIS(int t, int T_AIS){
+    double MoveRemEdgeAIS::gammaAIS(int t){
         
         if(t==0)
             return 0;
         
-        double result=1-pow(1-(t+0.0)/T_AIS ,5);
+        double result=1-pow(1-(t+0.0)/param->getT_AIS() ,param->getgamma_AIS());
         return(result);
     }
     
@@ -68,9 +68,9 @@ namespace weakarg
         for(int t=0; t<T_AIS; t++){
             
             if(t==0)
-                lratio+=l1-(gammaAIS(t+1,T_AIS)-gammaAIS(t,T_AIS))*l0+log((1.0+rectree->numRecEdge())*2.0/param->getRho()/rectree->getTTotal());
+                lratio+=l1-(gammaAIS(t+1)-gammaAIS(t))*l0+log((1.0+rectree->numRecEdge())*2.0/param->getRho()/rectree->getTTotal());
             else
-                lratio+=-(gammaAIS(t+1,T_AIS)-gammaAIS(t,T_AIS))*l0;
+                lratio+=-(gammaAIS(t+1)-gammaAIS(t))*l0;
             
             if(lu<=lratio){
                 break;
@@ -111,7 +111,7 @@ namespace weakarg
                 for (unsigned int i=start_star;i<end_star;i++)
                     param->setlocLL(i,store_star[i-start_star]);
                 
-                if (log(gsl_rng_uniform(rng))<=(l_star-l0)*(1-gammaAIS(t+1,T_AIS))){
+                if (log(gsl_rng_uniform(rng))<=(l_star-l0)*(1-gammaAIS(t+1))){
                     
                     dlog(1)<<"AISRJ t="<<t<<" out of "<<T_AIS<<"..."<<"MCMC in AIS Accepted!"<<endl;
                     l0=l_star;
