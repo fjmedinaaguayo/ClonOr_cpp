@@ -47,7 +47,7 @@ EXTRA SETTINGS FOR PARALLEL IMPLEMENTAION IN XCODE
 
 Running the program with argument -h shows help file with arguments needed. E.g. the program will run introducing the following arguments:
 	
-	-a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -m 2.5,100,10 true_tree.nwk simulatedData.xmfa test.xml
+	-a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -m 0.25,100,10 true_tree.nwk simulatedData.xmfa test.xml
 	where
 	-m requires 3 values (gamma, T, N) of types (double, int, int). 
 	   The value:
@@ -62,6 +62,6 @@ Running the program with argument -h shows help file with arguments needed. E.g.
 IN THE CLUSTER: 
 	
 	1. Compile cpp files using
-		g++ *.cpp -o <<NAME>> -lgsl -lgslcblas -lm
+		g++ *.cpp -o <<NAME>> -lgsl -lgslcblas -lm -fopenmp
 	2. Then run
-		./<<NAME>> -a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -m 2.5,100,1 true_tree.nwk simulatedData.xmfa test.xml
+		./<<NAME>> -a 1,1,1,2,2,1,1,1,0,0,0 -x 0 -y 500000 -z 10 -D50 -T 10 -R 5 -m 0.25,100,1 true_tree.nwk simulatedData.xmfa test.xml
