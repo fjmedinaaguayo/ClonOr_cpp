@@ -1,0 +1,49 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<outputFile>
+<Blocks>
+0,10000
+</Blocks>
+<comment>Command line: /Users/felipemedinaaguayo/Library/Developer/Xcode/DerivedData/ClonOr-ccovxmhdrglrcyfasedwzndowfck/Build/Products/Debug/ClonOr -a 1,1,1,5,5,1,1,1,0,0,0 -x 0 -y 200 -z 1 -D 100 -T s1 -R s1 -i 10,2,10000,50,10,5 -v test.xml 
+Version: warg build date Jun  7 2018 at 10:40:43
+Seed: 14564041421096578716</comment>
+<nameMap></nameMap>
+<regions>0</regions>
+<Iteration>
+<Tree>
+(5:1.192664e+00,((((0:1.457309e-01,2:1.457309e-01)13:3.274729e-02,3:1.784782e-01)14:1.005662e-01,(1:1.087875e-01,9:1.087875e-01)10:1.702568e-01)15:3.692163e-01,((4:1.402177e-01,(7:1.211646e-01,6:1.211646e-01)11:1.905310e-02)12:1.732254e-01,8:3.134431e-01)16:3.348175e-01)17:5.444035e-01)18:0.000000e+00;
+</Tree>
+<number>-1</number>
+<ll>-14128.3</ll>
+<prior>-185.126</prior>
+<theta>10</theta>
+<rho>5</rho>
+<delta>50</delta>
+<tmrca>1.19266</tmrca>
+<esttheta>0</esttheta>
+<estvartheta>0</estvartheta>
+<estrho>0</estrho>
+<estvarrho>0</estvarrho>
+<estdelta>0</estdelta>
+<estvardelta>0</estvardelta>
+<estnumrecedge>0</estnumrecedge>
+<estvarnumrecedge>0</estvarnumrecedge>
+<estedgeden>0</estedgeden>
+<estvaredgeden>0</estvaredgeden>
+<estedgepb>0</estedgepb>
+<estvaredgepb>0</estvaredgepb>
+<estedgevarpb>0</estedgevarpb>
+<estvaredgevarpb>0</estvaredgevarpb>
+<recedge><start>3601</start><end>3638</end><efrom>6</efrom><eto>6</eto><afrom>0.1049196785551591</afrom><ato>0.05825703334193136</ato></recedge>
+<recedge><start>66</start><end>106</end><efrom>13</efrom><eto>8</eto><afrom>0.0002295708031070653</afrom><ato>0.1209021880528193</ato></recedge>
+<recedge><start>5381</start><end>5507</end><efrom>5</efrom><eto>8</eto><afrom>0.1628255151459211</afrom><ato>0.03383270918703587</ato></recedge>
+<recedge><start>7394</start><end>7432</end><efrom>10</efrom><eto>10</eto><afrom>0.08756574923141257</afrom><ato>0.01501678640295015</ato></recedge>
+<recedge><start>415</start><end>436</end><efrom>10</efrom><eto>2</eto><afrom>0.08946397156345605</afrom><ato>0.08036999755917501</ato></recedge>
+<recedge><start>1518</start><end>1564</end><efrom>14</efrom><eto>4</eto><afrom>0.06569718224721818</afrom><ato>0.1041843467848595</ato></recedge>
+<recedge><start>0</start><end>54</end><efrom>14</efrom><eto>8</eto><afrom>0.08856040702116741</afrom><ato>0.2426935711624402</ato></recedge>
+<recedge><start>2465</start><end>2476</end><efrom>16</efrom><eto>16</eto><afrom>0.281376891896748</afrom><ato>0.2615756246040654</ato></recedge>
+<recedge><start>3436</start><end>3465</end><efrom>5</efrom><eto>5</eto><afrom>0.6935132087699017</afrom><ato>0.5403878309221785</ato></recedge>
+<recedge><start>8903</start><end>8964</end><efrom>18</efrom><eto>17</eto><afrom>0.6946409389248627</afrom><ato>0.06836731013146424</ato></recedge>
+<recedge><start>4295</start><end>4335</end><efrom>18</efrom><eto>15</eto><afrom>1.14852059642269</afrom><ato>0.1929979813132721</ato></recedge>
+<recedge><start>1593</start><end>1600</end><efrom>18</efrom><eto>15</eto><afrom>1.500215975167509</afrom><ato>0.1908407011686579</ato></recedge>
+</Iteration>
+</outputFile>
