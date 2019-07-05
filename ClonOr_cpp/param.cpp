@@ -127,8 +127,9 @@ void Param::readProgramOptions()
         omp_set_num_threads(nThreads);
         
         cout<<"No. of threads: "<< nThreads <<endl;
-        #pragma omp parallel for
         int N=this->getN_MAIS();
+        
+        #pragma omp parallel for
         for(int i=0; i<N; i++){
             
             this->rectreeAux_vec.push_back(new RecTreeAux(this->data,this->rectree));
