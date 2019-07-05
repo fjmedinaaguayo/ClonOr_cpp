@@ -30,7 +30,6 @@ public:
 		additional(100000),
 		thinin(100),
 		allowclonal(true),
-        T_AIS(1),
 		temperreps(0),
 		temperT(1.0),
 		subset(std::vector<int>(0)),
@@ -39,8 +38,10 @@ public:
 		verbose(0)
 		{
 			movep.resize(NUMMOVES,1.0);
+            MAISopt.resize(3,0.0);
 		}
     std::vector<double> movep; //length (NUMMOVES) vector with weights set to default 1
+    std::vector<double> MAISopt;
 
 	double theta;
 	double rho;
@@ -52,7 +53,6 @@ public:
 	int additional;
 	int thinin;
 	bool allowclonal;
-    int T_AIS;
 	int temperreps;
 	double temperT;
 	std::vector<int> subset;

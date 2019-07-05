@@ -7,6 +7,7 @@
 #include "movedelta.h"
 #include "moveremedge.h"
 #include "moveremedgeAIS.h"
+#include "moveremedgeMAIS.h"
 #include "moveaddedgeAIS.h"
 #include "moveaddedgeMAIS.h"
 #include "movesitechange.h"
@@ -16,6 +17,7 @@
 #include "movescaletree.h"
 #include "moveregraftclonal.h"
 #include "movegreedytree.h"
+#include <omp.h>
 
 
 //#define DEBUG
@@ -34,6 +36,8 @@ Param::Param()
     hRho=0.0;
     tempering=1.0;
     T_AIS=1;
+    N_MAIS=-1;
+    gamma_AIS=1;
     rectree=NULL;
     data=NULL;
     theta=1.0;
@@ -52,6 +56,7 @@ Param::Param(RecTree * rectree,Data * data)
     hRho=0.0;
     tempering=1.0;
     T_AIS=1;
+    N_MAIS=-1;
     this->rectree=rectree;
     this->data=data;
     theta=1.0;
@@ -70,7 +75,11 @@ Param::Param(RecTree * rectree,Data * data)
     
 Param::~Param()
 {
-    for (unsigned int i=0;i<mall.size();i++) if(mall.at(i)!=NULL) delete(mall.at(i));
+    for (unsigned int i=0;i<mall.size();i++){
+        
+      if(mall.at(i)!=NULL) delete(mall.at(i));
+    }
+    
 }
 
 void Param::readParamsFromFile(WargXml *infile,std::streampos itstart)
@@ -97,10 +106,34 @@ void Param::readProgramOptions()
     if (opt().rho<0.0) mall.push_back(new MoveRho(this,opt().movep[0]));
     if (opt().delta<0.0) mall.push_back(new MoveDelta(this,opt().movep[1]));
     if (opt().theta<0.0) mall.push_back(new MoveTheta(this,opt().movep[2]));
-    if (opt().T_AIS>0) setT_AIS(opt().T_AIS);
+    if (opt().MAISopt[0]>0) setgamma_AIS(opt().MAISopt[0]);
+    if (opt().MAISopt[1]>0) setT_AIS(opt().MAISopt[1]);
+    if (opt().MAISopt[2]>=0) setN_MAIS(opt().MAISopt[2]);
     
-    mall.push_back(new MoveRemEdgeAIS(this,opt().movep[3]));
-    mall.push_back(new MoveAddEdgeAIS(this,opt().movep[4]));
+    if(this->getN_MAIS()==0){
+        mall.push_back(new MoveRemEdgeAIS(this,opt().movep[3]));
+        mall.push_back(new MoveAddEdgeAIS(this,opt().movep[4]));
+        
+        this->rectreeAux_vec.push_back(new RecTreeAux(this->data,this->rectree));
+    }
+    else{
+        mall.push_back(new MoveRemEdgeMAIS(this,opt().movep[3]));
+        mall.push_back(new MoveAddEdgeMAIS(this,opt().movep[4]));
+        
+        int nProcessors=omp_get_max_threads();
+        int nThreads=nProcessors;
+        if(nProcessors>this->getN_MAIS())
+            nThreads=this->getN_MAIS();
+        omp_set_num_threads(nThreads);
+        
+        cout<<"No. of threads: "<< nThreads <<endl;
+        #pragma omp parallel for
+        for(int i=0; i<this->getN_MAIS(); i++){
+            
+            this->rectreeAux_vec.push_back(new RecTreeAux(this->data,this->rectree));
+        }
+        
+    }
     mall.push_back(new MoveSiteChange(this,opt().movep[5]));
     mall.push_back(new MoveTimeChange(this,opt().movep[6]));
     mall.push_back(new MoveEdgeChange(this,opt().movep[7]));
@@ -149,7 +182,7 @@ void Param::simulateData(vector<int> blocks)
     computeLikelihood();
 }
 
-void Param::metropolis(string comment)
+void Param::metropolis(string comment, int lastIterNum)
 {
     double totweight=0;
     for(unsigned int i=0;i<mall.size();i++)
@@ -167,25 +200,29 @@ void Param::metropolis(string comment)
     else
     	csv = new nullstream();
 
-    exportXMLbegin(output(true),comment);
-    output.flush();
+    if(!output.fileExists){
+        exportXMLbegin(output(true),comment);
+        output.flush();
+    }
     startDiagnostics(*csv);
 
     computeLikelihood();
     long int iterations = opt().burnin+opt().additional;
-    for (long int i=0;i<iterations;i++)
+    if(lastIterNum!=-1 && iterations>100 && (lastIterNum+1)%((iterations)/100)!=0)
+        cout<<"\b\b\b\b#  "<<100l*(double)(lastIterNum+1)/(iterations)<<"%"<<flush;
+    for (long int i=lastIterNum+1;i<=iterations;i++)
     {
     	dlog(1)<<"Iteration "<<i<<endl;
-
-		if (iterations>50 && (i)%((iterations)/50)==0)
+        
+		if (iterations>100 && (i)%((iterations)/100)==0)
 		{
 			if (100l*i/(iterations)<10)
 				cout<<"\b\b\b\b#  "<<100l*(double)i/(iterations)<<"%"<<flush;
 			else
 				cout<<"\b\b\b\b# "<<100l*(double)i/(iterations)<<"%"<<flush;
 		}
-		if (i+1==iterations)
-			cout<<"\b\b\b\b# 100%"<<endl<<flush;
+		//if (i+1==iterations)
+			//cout<<"\b\b\b\b# 100%"<<endl<<flush;
 //FMA_CHANGES: Line below is not needed.
 // for (unsigned int j=0;j<mall.size();j++)
         {
@@ -201,7 +238,7 @@ void Param::metropolis(string comment)
 #endif
         }
 //	if (iterations>50 && (i)%((iterations)/50)==0) greedyTreeMove();
-        if(i>=opt().burnin)
+        if(i>=opt().burnin || output.fileExists)
         {
             updateDiagnostics(i-opt().burnin,*csv);
             if((i-opt().burnin)%(opt().thinin)==0)
@@ -212,82 +249,8 @@ void Param::metropolis(string comment)
         }
     }
     if((iterations-opt().burnin)%(opt().thinin)==0) updateDiagnostics(iterations-opt().burnin,*csv);
-    exportXMLiter(output(false),iterations+1);
-    exportXMLend(output(true));
-    output.flush();
-    if(csv!=NULL) delete csv;	// forces a file close, if it was ever open
-}
-
-//FMA_CHANGES: new function metropolis_ais
-void Param::metropolis_ais(string comment)
-{
-    double totweight=0;
-    
-    //FMA_COMMENT: computes the total weight for different moves.
-    //FMA_COMMENT: mall is a vector of Move objects
-    for(unsigned int i=0;i<mall.size();i++)
-        totweight+=mall[i]->getAlpha();
-    if(totweight<=0)
-    {
-        cerr<<"Error: no move weightings are positive!"<<endl;
-        throw;
-    }
-
-    mpiofstream output(opt().outfile);
-    ostream* csv;
-    if(opt().csvoutfile.length()>0)
-    	csv = new ofstream(opt().csvoutfile.c_str());
-    else
-    	csv = new nullstream();
-
-    exportXMLbegin(output(true),comment);
-    output.flush();
-    startDiagnostics(*csv);
-
-    //FMA_COMMENT: computes full likelihood
-    computeLikelihood();
-    long int iterations = opt().burnin+opt().additional;
-    for (long int i=0;i<iterations;i++)
-    {
-    	dlog(1)<<"Iteration "<<i<<endl;
-
-		if (iterations>50 && (i)%((iterations)/50)==0)
-		{
-			if (100l*i/(iterations)<10)
-				cout<<"\b\b\b\b#  "<<100l*(double)i/(iterations)<<"%"<<flush;
-			else
-				cout<<"\b\b\b\b# "<<100l*(double)i/(iterations)<<"%"<<flush;
-		}
-		if (i+1==iterations)
-			cout<<"\b\b\b\b# 100%"<<endl<<flush;
-//FMA_CHANGES: Line below is not needed.
-// for (unsigned int j=0;j<mall.size();j++)
-        {
-            //FMA_COMMENT: chooses move randomly according to weights
-            int j2=chooseMove(&mall,totweight);
-            dlog(1)<<"("<<i<<":"<<mall[j2]->getName()<<") "<<flush;
-#if defined DEBUG
-            dlog(1)<<endl;
-#endif
-            try{mall[j2]->move();
-	    }catch(char * x){ cout<<"Error in Param: "<<x<<endl;}
-#if defined DEBUG
-            testTree();
-#endif
-        }
-//	if (iterations>50 && (i)%((iterations)/50)==0) greedyTreeMove();
-        if(i>=opt().burnin)
-        {
-            updateDiagnostics(i-opt().burnin,*csv);
-            if((i-opt().burnin)%(opt().thinin)==0)
-            {
-                exportXMLiter(output(false),i);
-                output.flush();
-            }
-        }
-    }
-    if((iterations-opt().burnin)%(opt().thinin)==0) updateDiagnostics(iterations-opt().burnin,*csv);
-    exportXMLiter(output(false),iterations+1);
+    //exportXMLiter(output(false),iterations+1);
+    cout<<endl;
     exportXMLend(output(true));
     output.flush();
     if(csv!=NULL) delete csv;	// forces a file close, if it was ever open
@@ -502,51 +465,6 @@ void Param::computeSiteLL(unsigned int site,bool makeLT)
 }
 
 void Param::computeLikelihood(unsigned int start, unsigned int end)
-{
-    if (data==NULL)
-        return;
-    bool doneOne=false;
-    for (unsigned int site=start;site<end;site++)
-    {
-        ll-=locll[site];
-        int prev=site-1;
-        if (data->isPoly(site))
-            goto noopti;
-        //Shortcut. Find previous non-poly site, see if it has same local tree, and if so steal its ll
-        while (prev>=0 && data->isPoly(prev))
-            prev--;
-        if (prev<0)
-            goto noopti;//No previous non-poly site found
-        for (unsigned int i=prev+1;i<=site;i++)
-            if (!rectree->sameLocalTreeAsPrev(i))
-                goto noopti;//prev and site don't have the same local tree
-        if(isnan(locll[prev]))
-        {
-            cout<<"Site "<<prev<<" has NaN lik.  Tried to use it for site "<<site<< " isPoly="<<data->isPoly(prev)<<" sameasprev="<<rectree->sameLocalTreeAsPrev(prev)<<endl;
-            throw "NaN site lik";
-        }
-        locll[site]=locll[prev];
-        ll+=locll[site];
-        if(isnan(locll[site]))
-        {
-            cerr<<"site "<<site<<" has NaN lik! isPoly="<<data->isPoly(site)<<" sameasprev="<<rectree->sameLocalTreeAsPrev(site)<<endl;
-            throw;
-        }
-        continue;
-noopti:
-        if (site>start&&doneOne&&rectree->sameLocalTreeAsPrev(site))
-	{
-            computeSiteLL(site,false);
-        }else
-        {
-            computeSiteLL(site,true);
-            doneOne=true;
-        }
-        ll+=locll[site];
-    }
-}
-
-void Param::FMAcomputeLikelihood(unsigned int start, unsigned int end)
 {
     if (data==NULL)
         return;

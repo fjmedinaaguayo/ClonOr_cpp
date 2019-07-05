@@ -11,6 +11,7 @@ namespace weakarg
 class RecEdge
 {
     friend class RecTree;
+    friend class RecTreeAux;
 protected:
     double timeFrom,timeTo;///< times of the edge in coalescent time
     unsigned int gstart,gend;///< positions effected by the edge on the genome

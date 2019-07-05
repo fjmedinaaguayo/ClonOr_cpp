@@ -23,7 +23,7 @@ protected:
     int numcalls;///<Number of attempts at the move
     int numaccept;///<Number of acceptances of the move
 public:
-    Move(Param*p,double a=1.0);//FMA_CHANGES:<Constructor specifying on which Parameter the move is to be performed
+    Move(Param*p,double a=1.0);///<Constructor specifying on which Parameter the move is to be performed
     virtual Move * clone()=0;
     virtual ~Move()=0;
     virtual int move()=0;///<Performs the move once

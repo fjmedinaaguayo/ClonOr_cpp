@@ -339,22 +339,22 @@ try{
     if(edgeto  <2*N-2&&tto  +nodes[edgeto  ]->getAge()>nodes[edgeto  ]->getFather()->getAge())
     {
         cerr <<std::setprecision(64)<< "Edge to age:"<<tto+nodes[edgeto  ]->getAge()<<" appears to be greater than that nodes parent age:"<<nodes[edgeto]->getFather()->getAge()<<". Edge details: tfrom="<<tfrom<<" tto="<<tto<<" efrom="<<edgefrom<<" eto="<<edgeto<<" start="<<gstart<<" end="<<gend<<endl;
-	if(tto  +nodes[edgeto  ]->getAge()-nodes[edgeto  ]->getFather()->getAge()>0.0001)        throw "Edge age violation";// throw error if difference is not small
-	cerr<<"Error in addRecEdge: Not adding edge!"<<endl<<endl;
-	return(-1);// or just ignore edge otherwise;
+        if(tto  +nodes[edgeto  ]->getAge()-nodes[edgeto  ]->getFather()->getAge()>0.0001)        throw "Edge age violation";// throw error if difference is not small
+        cerr<<"Error in addRecEdge: Not adding edge!"<<endl<<endl;
+        return(-1);// or just ignore edge otherwise;
     }
     if(edgefrom<2*N-2&&tfrom+nodes[edgefrom]->getAge()>nodes[edgefrom]->getFather()->getAge())
     {
-	// allow for some loss of precision
-	if((tfrom+nodes[edgefrom]->getAge())-nodes[edgefrom]->getFather()->getAge()>0.0001)
-	{
-	        cerr <<std::setprecision(64)<< "Edge from node "<<edgefrom<<" of age "<<nodes[edgefrom]->getAge()<< " has age:"<<tfrom+nodes[edgefrom]->getAge()<<" which is greater than that nodes parent age:"<<nodes[edgefrom]->getFather()->getAge()<<"! (from "<<edgefrom<<")"<<endl;
-	        throw "Edge age violation";
-	}else if((tfrom+nodes[edgefrom]->getAge())-nodes[edgefrom]->getFather()->getAge() > 0){
-		//tfrom=(nodes[edgefrom]->getFather()->getAge()-nodes[edgefrom]->getAge())*(1.0-0.001 * gsl_rng_uniform(rng));
-		cerr<<"Error in addRecEdge: Not adding edge!"<<endl<<endl;
-		return(-1);// or just ignore edge otherwise;
-	}
+        // allow for some loss of precision
+        if((tfrom+nodes[edgefrom]->getAge())-nodes[edgefrom]->getFather()->getAge()>0.0001)
+        {
+            cerr <<std::setprecision(64)<< "Edge from node "<<edgefrom<<" of age "<<nodes[edgefrom]->getAge()<< " has age:"<<tfrom+nodes[edgefrom]->getAge()<<" which is greater than that nodes parent age:"<<nodes[edgefrom]->getFather()->getAge()<<"! (from "<<edgefrom<<")"<<endl;
+            throw "Edge age violation";
+        }else if((tfrom+nodes[edgefrom]->getAge())-nodes[edgefrom]->getFather()->getAge() > 0){
+        //tfrom=(nodes[edgefrom]->getFather()->getAge()-nodes[edgefrom]->getAge())*(1.0-0.001 * gsl_rng_uniform(rng));
+            cerr<<"Error in addRecEdge: Not adding edge!"<<endl<<endl;
+            return(-1);// or just ignore edge otherwise;
+        }
         if(gstart==gend)
         {
             cerr<<"gstart==gend"<<endl;
@@ -362,15 +362,31 @@ try{
         }
     }
 }catch(char * x){
-	cerr<<"Error in addRecEdge: Not adding edge!"<<endl<<x<<endl;
-	return(-1);
+    cerr<<"Error in addRecEdge: Not adding edge!"<<endl<<x<<endl;
+    return(-1);
 }
     unsigned int i=0;
     while (i<edge.size() && edge[i]->getTimeFrom()+nodes[edge[i]->getEdgeFrom()]->getAge()<tfrom+nodes[edgefrom]->getAge())
         i++;
 
-    RecEdge* re = SlotAllocator<RecEdge>::GetSlotAllocator().Allocate();	// gets storage for a new RecEdge from a pool of storage
-	new (re) RecEdge(tfrom,tto,gstart,gend,edgefrom,edgeto);	// uses in-place new to call constructor
+    RecEdge* re = SlotAllocator<RecEdge>::GetSlotAllocator().Allocate();  // gets storage for a new RecEdge from a pool of storage
+    new (re) RecEdge(tfrom,tto,gstart,gend,edgefrom,edgeto);    // uses in-place new to call constructor
+    
+    edge.insert(edge.begin()+i,re);
+    sameLTasPrev[gstart]=false;
+    if (gend<L)
+        sameLTasPrev[gend]=false;
+        return i;
+    }
+    
+    //FMA_CHANGES: My simplified add_recedge
+int RecTree::addRecEdge_FMA(double tfrom,double tto,unsigned int gstart,unsigned int gend,int edgefrom,int edgeto)
+{
+    unsigned int i=0;
+    while (i<edge.size() && edge[i]->getTimeFrom()+nodes[edge[i]->getEdgeFrom()]->getAge()<tfrom+nodes[edgefrom]->getAge())
+        i++;
+
+    RecEdge* re = new RecEdge(tfrom,tto,gstart,gend,edgefrom,edgeto);
 
     edge.insert(edge.begin()+i,re);
     sameLTasPrev[gstart]=false;

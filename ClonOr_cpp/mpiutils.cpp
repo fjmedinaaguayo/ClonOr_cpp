@@ -106,7 +106,21 @@ ostream& dlog()
 mpiofstream::mpiofstream(const std::string& fname) :
 	fname(fname)
 {
-	file = new ofstream(fname.c_str());
+    ofstream outputFile;
+    outputFile.open(fname, ios::out|ios::app);
+    
+    //FMA_CHANGES: If file exists append
+    if(outputFile.fail()){
+        file = new ofstream(fname.c_str());
+        fileExists=false;
+    }
+    else{
+        file = new ofstream(fname.c_str(), ios::app);
+        fileExists=true;
+        
+    }
+    
+        
 }
 void mpiofstream::flush()
 {

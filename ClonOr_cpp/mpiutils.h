@@ -49,6 +49,8 @@ struct nullstream:
 class mpiofstream
 {
 public:
+    bool fileExists;
+    
 	mpiofstream(const std::string& fname);///<Opens a file with the given name
 	~mpiofstream();
 	void flush();///<Causes data to be written

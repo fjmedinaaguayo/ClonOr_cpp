@@ -8,6 +8,7 @@
 #include "moveaddedgeMAIS.h"
 #include "moveremedge.h"
 #include "moveremedgeAIS.h"
+#include "moveremedgeMAIS.h"
 //
 namespace weakarg
 {

@@ -2,6 +2,7 @@
 #define PARAM_H
 #include "data.h"
 #include "rectree.h"
+#include "rectreeAux.h"
 #include <vector>
 #define LOG025 -1.38629461
 #include "weakarg.h"
@@ -27,7 +28,7 @@ public:
     virtual ~Param();
     void readParamsFromFile(WargXml * infile,std::streampos itstart=-1);///<Reads the parameter values from an output file
     void readProgramOptions();///<Sets MCMC parameters based on command-line options
-    void metropolis(string comment=string(""));///<Performs the Metropolis-Hastings algorithm
+    void metropolis(string comment=string(""), int lastIterNum=-1);///<Performs the Metropolis-Hastings algorithm
     void metropolis_ais(string comment=string(""));///FMA_CHANGES: <Performs the AIS version
     void simulateData(std::vector<int> blocks);///<Simulates data given the weak ARG, using the data structure provided
     inline RecTree * getTree()
@@ -53,13 +54,21 @@ public:
     void exportXMLiter(std::ostream& out, long i=-1);///<Creates an iteration in the output file
     void computeLikelihood();///<Calculates the current likelihood
     void computeLikelihood(unsigned int start, unsigned int end);///<Calculates the current likelihood for a range of sites
-    void FMAcomputeLikelihood(unsigned int start, unsigned int end); //FMA_CHANGES: my likelihood function
     double getRlenPrior(int edge);///<Returns the log of the prior due to genetic position for a recedge
     //FMA_CHANGES: getT_AIS
     inline double getT_AIS() const
     {
         return T_AIS;
     }///<Returns the value of T_AIS
+    inline double getgamma_AIS() const
+    {
+        return gamma_AIS;
+    }///<Returns the value of T_AIS
+    //FMA_CHANGES: getN_MAIS
+    inline double getN_MAIS() const
+    {
+        return N_MAIS;
+    }///<Returns the value of N_MAIS
     inline double getTheta() const
     {
         return theta;
@@ -87,7 +96,19 @@ public:
     inline void setT_AIS(int T_AIS)
     {
         this->T_AIS=T_AIS;
-    }///<Sets the value of delta
+    }///<Sets the value of T_AIS
+    inline void setgamma_AIS(double gamma_AIS)
+    {
+        this->gamma_AIS=gamma_AIS;
+    }///<Sets the value of T_AIS
+    inline void setN_MAIS(int N_MAIS)
+    {
+        this->N_MAIS=N_MAIS;
+    }///<Sets the value of N_MAIS
+    inline void setMall(vector<Move*> mall){
+        
+        this->mall=mall;
+    }///<Sets the value of mall
     inline double getLL() const
     {
         return ll/tempering;
@@ -104,6 +125,18 @@ public:
     {
         locll[i]=l*tempering;
     }///<Sets the value of the local likelihood
+    inline void setlocLL_vec(vector<double> llvec)
+    {
+        locll=llvec;
+    }///FMA_CHANGES: Sets vector of ll
+    inline vector<double> getlocLL_vec()
+    {
+        return this->locll;
+    }///FMA_CHANGES: Gets vector of ll
+    inline vector<RecTreeAux*> getRectreeAux_vec()
+    {
+        return this->rectreeAux_vec;
+    }///FMA_CHANGES: Gets vector of ll
     inline double getPrior()
     {
 	return(rectree->prior(this));
@@ -184,7 +217,9 @@ public:
     double empiricalTheta(vector< vector<double> > * mutpairwise);
 protected:
 	double tempering;///< Tempering of the likelihood
-    double T_AIS;///FMA_CHANGES: number of AIS steps
+    int T_AIS;///FMA_CHANGES: number of AIS steps
+    int N_MAIS;///FMA_CHANGES: number of replicates for MAIS
+    double gamma_AIS;
 	std::vector<Move*> mall;///< Vector of moves
     std::vector<std::vector<double> > f;
 
@@ -195,6 +230,7 @@ protected:
     double ll;///<Current value of the log-likelihood
     std::vector<double> locll; ///<Current values of the local log-likelihood
     RecTree * rectree;///<Tree on which the parameters apply
+    std::vector<RecTreeAux*> rectreeAux_vec; ///FMA_CHANGES: for MAIS computation
     Data * data;///<Data and ancestral states of the ancestral nodes
     void computeSiteLL(unsigned int site,bool makeLT);///<Computes the Log Likelihood of a given site
     // diagnostics:

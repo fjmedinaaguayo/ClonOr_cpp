@@ -22,6 +22,7 @@ class Param;
 
 class RecTree:public Tree
 {
+    friend class RecTreeAux;
 protected:
 // Variables
     std::vector<std::vector<int> > tabSons;///<Contains the branching order for the current local tree
@@ -38,7 +39,7 @@ protected:
     int randomActiveNode(std::vector<int> nodelist);///<Returns a random node id from a vector of indicators for alive (-1 for not alive at current time)
     int getEdgeCoal(std::vector<int> nl,int k,double* time);///<Returns the node the recombinant edge is from and sets the time
 
-    int moveClonalFixFrom(std::vector<int> ornodes=std::vector<int>(0));///< Fixes all from times to be in to valid nodes and reinstates the vector ornodes. returns the number of recedges moved to younger nodes - number moved to older nodes (or -1 if this is not calculated)
+    int moveClonalFixFrom(std::vector<int> ornodes=std::vector<int>(0));///< Fixes all from times to be in to valid nodes and reinstates **the vector ornodes. returns the number of recedges moved to younger nodes - number moved to older nodes (or -1 if this is not calculated)
 
     void updateEdgeTimes(int e,double reldist);///moves an edge when its node changes by proportion reldist
     void scaleEdges(int which, double dist);///<Scales the recedges "to" on edge which by an amount dist
@@ -151,6 +152,7 @@ public:
 // Modification functions:
     void addEdgesFromFile(WargXml *infile,int siteoffset=0);///< adds edges to the rectree from the specified warg XML file (which is set to an iteration). Adds a "siteoffset" to add edges from different runs on different genes
     int addRecEdge(double tfrom,double tto,unsigned int gstart,unsigned int gend,int edgefrom,int edgeto);///<Adds an recombination edge to the tree
+    int addRecEdge_FMA(double tfrom,double tto,unsigned int gstart,unsigned int gend,int edgefrom,int edgeto);///FMA_CHANGES: <Adds an recombination edge to the tree
     int addRecEdge(unsigned int gstart,unsigned int gend,int edgefrom,int edgeto);///< Adds a recombination edge with random start and end times between given edges
     int addRecEdge(std::string res,int sitesoffset=0);///<Add recedge from our output format
     void remRecEdge(int which);///<Removes a recombinant edge

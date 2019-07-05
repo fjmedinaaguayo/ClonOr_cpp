@@ -19,16 +19,167 @@ namespace weakarg
         name= "AddEdge";
     }
     
-    double MoveAddEdgeAIS::gammaAIS(int t, int T_AIS){
+    double MoveAddEdgeAIS::gammaAIS(int t){
         
         if(t==0)
             return 0;
         
-        double result=pow((t+0.0)/T_AIS ,5);
+        double result=pow((t+0.0)/param->getT_AIS() , param->getgamma_AIS());
         return(result);
     }
     
     int MoveAddEdgeAIS::move(vector<int> * samplespace)
+    {
+        
+        int T=param->getT_AIS();
+        int N=param->getN_MAIS()+1;
+        RecTree* rectree0=param->getRecTree();
+        
+        vector<double> tfrom(N),tto(N);
+        vector<unsigned int> start(N),end(N);
+        vector<unsigned int> efrom(N),eto(N);
+        int which;
+        vector<vector<double> > store_ll0(N);
+        vector<vector<double> > store_ll(N);
+        double l;
+        vector<double> ll(N), lratio(N,0.0);
+        
+        double l0=param->getLL(), lu=log(gsl_rng_uniform(rng));
+        
+        for(int n=0; n<N; n++){
+
+            int t=0;
+            
+            //Draw start and end
+            param->getRectreeAux_vec()[n]->rectree0->setBlock(&start[n],&end[n],param->getDelta(),param->getData()->getBlocks());
+            
+            //Draw eto and tto
+            eto[n]=param->getRectreeAux_vec()[n]->rectree0->getPoint(&tto[n]);
+            
+            //Draw efrom and tfrom
+            tfrom[n]=tto[n]+param->getRectreeAux_vec()[n]->rectree0->getNode(eto[n])->getAge();
+            efrom[n]=param->getRectreeAux_vec()[n]->rectree0->getEdgeCoal(&tfrom[n]);
+            tfrom[n]-=param->getRectreeAux_vec()[n]->rectree0->getNode(efrom[n])->getAge();
+            
+            param->getRectreeAux_vec()[n]->setAll(start[n],end[n],tfrom[n],tto[n],efrom[n],eto[n]);
+            store_ll0[n]=vector<double>(end[n]-start[n]);
+            
+            double ll_partial=param->getRectreeAux_vec()[n]->computePartialLL(param->getTheta());
+            double ll0_partial=0;
+            for (unsigned int i=start[n];i<end[n];i++){
+                store_ll0[n][i-start[n]]=param->getLLsite(i);
+                ll0_partial+=store_ll0[n][i-start[n]];
+            }
+            store_ll[n]=param->getRectreeAux_vec()[n]->store_ll;
+            
+            ll[n]=l0-ll0_partial+ll_partial;
+            
+            while(t<T){
+                
+                if(t==0) lratio[n]+=(gammaAIS(t+1)-gammaAIS(t))*ll[n]-l0+log(param->getRho()*rectree0->getTTotal()/2.0/(rectree0->numRecEdge()+1));
+                else
+                    lratio[n]+=(gammaAIS(t+1)-gammaAIS(t))*ll[n];
+                
+                if(lratio[n]<lu){
+                    break;
+                }
+                
+                if(t!=T-1){
+                    
+                    double tfrom_Temp,tto_Temp;
+                    unsigned int start_Temp, end_Temp;
+                    unsigned int efrom_Temp, eto_Temp;
+                    vector<double> store_ll0_Temp;
+                    vector<double> store_ll_Temp;
+                    double ll_Temp;
+                    
+                    //Draw start and end
+                    param->getRectreeAux_vec()[n]->rectree0->setBlock(&start_Temp,&end_Temp,param->getDelta(),param->getData()->getBlocks());
+                    
+                    //Draw eto and tto
+                    eto_Temp=param->getRectreeAux_vec()[n]->rectree0->getPoint(&tto_Temp);
+                    
+                    //Draw efrom and tfrom
+                    tfrom_Temp=tto_Temp+param->getRectreeAux_vec()[n]->rectree0->getNode(eto_Temp)->getAge();
+                    efrom_Temp=param->getRectreeAux_vec()[n]->rectree0->getEdgeCoal(&tfrom_Temp);
+                    tfrom_Temp-=param->getRectreeAux_vec()[n]->rectree0->getNode(efrom_Temp)->getAge();
+                    
+                    param->getRectreeAux_vec()[n]->setAll(start_Temp,end_Temp,tfrom_Temp,tto_Temp,efrom_Temp,eto_Temp);
+                    store_ll0_Temp=vector<double>(end_Temp-start_Temp);
+                    
+                    double ll_partial_Temp=param->getRectreeAux_vec()[n]->computePartialLL(param->getTheta());
+                    double ll0_partial_Temp=0;
+                    for (unsigned int i=start_Temp;i<end_Temp;i++){
+                        store_ll0_Temp[i-start_Temp]=param->getLLsite(i);
+                        ll0_partial_Temp+=store_ll0_Temp[i-start_Temp];
+                    }
+                    store_ll_Temp=param->getRectreeAux_vec()[n]->store_ll;
+                    
+                    ll_Temp=l0-ll0_partial_Temp+ll_partial_Temp;
+                    
+                    if (log(gsl_rng_uniform(rng))<=(ll_Temp-ll[n])*(gammaAIS(t+1))){
+                        
+                        dlog(1)<<"AISRJ t="<<t<<" out of "<<T<<"..."<<"MCMC in AIS Accepted!"<<endl;
+                        tfrom[n]=tfrom_Temp;
+                        tto[n]=tto_Temp;
+                        start[n]=start_Temp;
+                        end[n]=end_Temp;
+                        efrom[n]=efrom_Temp;
+                        eto[n]=eto_Temp;
+                        ll[n]=ll_Temp;
+                        
+                        store_ll[n]=store_ll_Temp;
+                        store_ll0[n]=store_ll0_Temp;
+                    }
+                    
+                }
+                t++;
+                
+            }
+        }
+        
+        int k=0;
+        numcalls++;
+        dlog(1)<<"Proposing to add edge via MAISRJ "<<efrom[k]<<":"<<tfrom[k]<<"->"<<eto[k]<<":"<<tto[k]<<"...";
+        
+        
+        if (lu>lratio[0])
+        {
+            dlog(1)<<"Rejected!"<<endl;
+            
+            return(0);
+        }
+        else dlog(1)<<"Accepted!"<<endl;
+        
+        which=rectree0->addRecEdge_FMA(tfrom[k],tto[k],start[k],end[k],efrom[k],eto[k]);
+        //param->computeLikelihood(start[k],end[k]);
+        //l=param->getLL();
+        
+        for (unsigned int i=start[k];i<end[k];i++)
+            param->setlocLL(i,store_ll[k][i-start[k]]);
+        
+        param->setLL(ll[k]);
+        l=ll[k];
+        
+        if(fabs(l-ll[k])>1e-6){
+            
+            cout<<"Error adding edge, diff in ll: "<<(l-ll[k])<<endl;
+            
+            for(unsigned int site=start[k]; site<end[k]; site++){
+                if(fabs(store_ll[k][site-start[k]]-param->getLLsite(site))>1e-6){
+                    cout<<"site "<<site<<", ll: "<<store_ll[k][site-start[k]]<<" vs "<<param->getLLsite(site)<<endl;
+                }
+            }
+            
+            return -1;
+        }
+        numaccept++;
+        
+        return(1);
+    }
+    
+    /*
+    int MoveAddEdgeAIS::move_old(vector<int> * samplespace)
     {
         int T_AIS=param->getT_AIS();
         RecTree * rectree=param->getRecTree();
@@ -78,9 +229,9 @@ namespace weakarg
             l1=param->getLL();
             
             if(t==0)
-                lratio+=(gammaAIS(t+1,T_AIS)-gammaAIS(t,T_AIS))*l1-l0+log(param->getRho()*rectree->getTTotal()/2.0/rectree->numRecEdge());
+                lratio+=(gammaAIS(t+1)-gammaAIS(t))*l1-l0+log(param->getRho()*rectree->getTTotal()/2.0/rectree->numRecEdge());
             else
-                lratio+=(gammaAIS(t+1,T_AIS)-gammaAIS(t,T_AIS))*l1;
+                lratio+=(gammaAIS(t+1)-gammaAIS(t))*l1;
             
             if(lratio<lu){
                 break;
@@ -122,7 +273,7 @@ namespace weakarg
                 param->computeLikelihood(start2,end2);
                 l2=param->getLL();
                 
-                if (log(gsl_rng_uniform(rng))>(l2-l1)*(gammaAIS(t+1,T_AIS))){
+                if (log(gsl_rng_uniform(rng))>(l2-l1)*(gammaAIS(t+1))){
                     
                     param->getRecTree()->remRecEdge(which2);
                     for (unsigned int i=start2;i<end2;i++)
@@ -167,6 +318,7 @@ namespace weakarg
         numaccept++;
         return(1);
     }
+    */
     
     MoveAddEdgeAIS::~MoveAddEdgeAIS()
     {}

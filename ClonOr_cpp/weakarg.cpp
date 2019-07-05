@@ -17,9 +17,9 @@
 using namespace std;
 namespace weakarg
 {
-bool initializeTree(Data* &datap, RecTree* &rectree,vector<string> inputfiles,string datafile);///< initialises the rectree based on the inputfiles specified.
+bool initializeTree(Data* &datap, RecTree* &rectree,vector<string> inputfiles,string datafile, int* lastIterNum=NULL);///< initialises the rectree based on the inputfiles specified.
 RecTree * makeGreedyTree(Data * data,WargXml * infile,vector< vector<double> >  * sumdetails,int *count,vector<double> * pars,vector<double> *sumdists);///< makes a greeedy "best tree" from a previous warg run
-vector<double> readInputFiles(Data* &data, RecTree* &rectree,vector<double> &sumdists,vector<int> &keepregions,vector<int> &previousL,vector<string> inputfiles,string datafile,int greedystage);///< Reads the input files and processes them according to the stage of the input procedure.
+vector<double> readInputFiles(Data* &data, RecTree* &rectree,vector<double> &sumdists,vector<int> &keepregions,vector<int> &previousL,vector<string> inputfiles,string datafile,int greedystage, int* lastIterNum=NULL);///< Reads the input files and processes them according to the stage of the input procedure.
 
 ProgramOptions& opt() {
 	static ProgramOptions po;	// define a single instance of ProgramOptions per process.
@@ -88,6 +88,10 @@ static const char * help=
     	MoveAgeClonal\n\
     	MoveScaleTree\n\
     	MoveRegraftClonal\n\
+    -m double,int,int Set THREE numbers required for MAIS implementation:\n\
+        gamma Power used in the annealing computation, gamma>1 means steps for jumping up concentrate near start, gamma=1 means steps are equidistant\n\
+        T Number of steps for AIS, T=1 corresponds to no intermediate steps\n\
+        N Number of replications for MAIS, instead of using N=1 (which corresponds to pure AIS-RJMCMC) use N=0.\n\
     -i NUM,...,NUM	Set the SIX parameters for creating random Recombination Trees\n\
 			under the inference model.  The parameters are:\n\
     	N	(integer)	The number of sequences in the sample (default 10)\n\
@@ -127,7 +131,8 @@ int main(int argc, char *argv[])
     unsigned long seed=0;
     bool readparams=false;
     bool setregions=false;
-    while ((c = getopt (argc, argv, "w:x:y:z:s:va:T:R:D:L:C:A:r:t:i:S:G:fUhV")) != -1)
+    int lastIterNum=-1;
+    while ((c = getopt (argc, argv, "w:x:y:z:s:va:T:R:D:L:C:m:r:t:i:S:G:fUhV")) != -1)
         switch (c)
         {
         case('w'):if(atoi(optarg)>=0)opt().preburnin=atoi(optarg);break;
@@ -168,8 +173,14 @@ int main(int argc, char *argv[])
         case('V'):printVersion();  return 0;
 	case('S'):pch= strrchr (optarg,',');
             {opt().theta=atof(optarg+1);opt().thetaPerSite=true;};break;
-                //FMA_CHANGES: Line below option for AIS steps
-            case('A'):if(atoi(optarg)>=0)opt().T_AIS=atoi(optarg);break;
+                //FMA_CHANGES: Options for MAIS: gamma, T, N
+    case('m'):pch = strtok (optarg,",");
+                for(int i=0;i<3;i++) {
+                    if(pch==NULL) {cout<<"Wrong -m string."<<endl<<help<<endl;return 1;}
+                    opt().MAISopt[i]=fabs(atof(pch));
+                    pch = strtok (NULL, ",");
+                };break;
+    
 	if(pch!=NULL){pch = strtok (optarg,",");opt().subset.push_back(atoi(pch));pch = strtok (NULL,",");opt().subsetSeed=atoi(pch);
 	}else{
 	    pch = strtok (optarg,"/");
@@ -248,7 +259,7 @@ if (argc-optind!=1 && argc-optind!=2) {cout<<"Wrong number of arguments."<<endl<
     }else{//Load tree and data from files
         string datafile=string(argv[optind++]);
 try{
-	readparams=initializeTree(data,rectree,inputfiles,datafile);// initialises data and rectree! (passed by reference)
+	readparams=initializeTree(data,rectree,inputfiles,datafile,&lastIterNum);// initialises data and rectree! (passed by reference)
 }catch(char *x){cout<<x<<endl;}
 	if(data==NULL) {cerr<<"Error: No Data initialised.  Was there a problem with the input file?"<<endl; exit(0);}
 	if(rectree==NULL) {cerr<<"Error: No Rectree initialised.  Was there a problem with the input file?"<<endl; exit(0);}
@@ -263,7 +274,7 @@ try{
     }
     opt().outfile = argv[optind++];
 
-    if(opt().preburnin>0 && (opt().movep[8]>0 || opt().movep[10]>0)) {
+    if(opt().preburnin>0 && (opt().movep[8]>0 || opt().movep[10]>0) && lastIterNum==-1) {
 	cout<<"Starting Pre-burnin Metropolis-Hastings algorithm.."<<endl;
 	double rho=opt().rho;
 	opt().rho=0;
@@ -279,7 +290,7 @@ try{
 	p.readProgramOptions();
     }else if(!readparams) p.readProgramOptions();
     cout<<"Starting Metropolis-Hastings algorithm............."<<endl;
-    p.metropolis(comment);
+    p.metropolis(comment, lastIterNum);
 
     dlog(1)<<"Cleaning up..."<<endl;
     if(p.getRecTree()) delete(p.getRecTree());
@@ -344,7 +355,7 @@ try{
 }
 
 
-vector<double> readInputFiles(Data* &data, RecTree* &rectree,vector<double> &sumdists,vector<int> &keepregions,vector<int> &previousL,vector<string> inputfiles,string datafile,int greedystage)
+vector<double> readInputFiles(Data* &data, RecTree* &rectree,vector<double> &sumdists,vector<int> &keepregions,vector<int> &previousL,vector<string> inputfiles,string datafile,int greedystage, int* lastIterNum)
 {
 	bool setregions=false;
 	if(opt().subset.size()>0 || opt().subsetSeed !=-1) setregions=true;
@@ -382,12 +393,16 @@ vector<double> readInputFiles(Data* &data, RecTree* &rectree,vector<double> &sum
 				if(c1==0) rectree=new RecTree(previousL.back(),&infile,false);
 				rectree->addEdgesFromFile(&infile,previousL[c1]);
 			}
+            //FMA_CHANGES: find last iteration number
+            int temp=stoi(infile.getParam("number",infile.gotoLineContaining("<number>",true)));
+            *lastIterNum=temp;
+            //cout<<*lastIterNum<<endl;
 		}
 	}
 	return(pars);
 }
 
-bool initializeTree(Data* &data, RecTree* &rectree,vector<string> inputfiles,string datafile)
+bool initializeTree(Data* &data, RecTree* &rectree,vector<string> inputfiles,string datafile, int* lastIterNum)
 {
 	vector<double>pars(3,0.0);
 	vector<double> sumdists;
@@ -400,7 +415,7 @@ bool initializeTree(Data* &data, RecTree* &rectree,vector<string> inputfiles,str
 	  readInputFiles(data,rectree,sumdists,keepregions,previousL,inputfiles,datafile,2);
 	}else{// just read in the input and keep the specified regions
 	if(inputfiles.size()>1) cerr<<"Warning: multiple input files specified but this is only purposeful with the -G -1 option. Ignoring all but the final one."<<endl;
-	  pars=readInputFiles(data,rectree,sumdists,keepregions,previousL,inputfiles,datafile,0);
+	  pars=readInputFiles(data,rectree,sumdists,keepregions,previousL,inputfiles,datafile,0,lastIterNum);
 	}
 	for(unsigned int i=0;i<pars.size();i++) if(pars[i]!=0) readparams=true;
 
