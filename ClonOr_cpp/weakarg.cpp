@@ -394,7 +394,7 @@ vector<double> readInputFiles(Data* &data, RecTree* &rectree,vector<double> &sum
 				rectree->addEdgesFromFile(&infile,previousL[c1]);
 			}
             //FMA_CHANGES: find last iteration number
-            int temp=std::stoi(infile.getParam("number",infile.gotoLineContaining("<number>",true)));
+            int temp=std::atoi(infile.getParam("number",infile.gotoLineContaining("<number>",true)));
             *lastIterNum=temp;
             //cout<<*lastIterNum<<endl;
 		}
