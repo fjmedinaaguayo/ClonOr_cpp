@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9010C24022B0334200B8827E /* rectreeAux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9010C23E22B0334200B8827E /* rectreeAux.cpp */; };
 		9042B99B22329B2C00629824 /* data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96322329B2400629824 /* data.cpp */; };
 		9042B99C22329B2C00629824 /* metropolis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96522329B2400629824 /* metropolis.cpp */; };
 		9042B99D22329B2C00629824 /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B96722329B2500629824 /* node.cpp */; };
@@ -34,6 +35,8 @@
 		9042B9B322329B2C00629824 /* movescaletree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99722329B2B00629824 /* movescaletree.cpp */; };
 		9042B9B422329B2C00629824 /* rng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99822329B2B00629824 /* rng.cpp */; };
 		9042B9B522329B2C00629824 /* moveedgechange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99A22329B2B00629824 /* moveedgechange.cpp */; };
+		90B57A91225FB4D300E76965 /* libiomp5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B57A90225FB4D300E76965 /* libiomp5.dylib */; };
+		90B57A942278C42900E76965 /* moveremedgeMAIS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90B57A922278C42900E76965 /* moveremedgeMAIS.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9010C23E22B0334200B8827E /* rectreeAux.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rectreeAux.cpp; sourceTree = "<group>"; };
+		9010C23F22B0334200B8827E /* rectreeAux.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rectreeAux.h; sourceTree = "<group>"; };
 		9042B95822329B0200629824 /* ClonOr_cpp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ClonOr_cpp; sourceTree = BUILT_PRODUCTS_DIR; };
 		9042B96222329B2400629824 /* movedelta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movedelta.h; sourceTree = "<group>"; };
 		9042B96322329B2400629824 /* data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = data.cpp; sourceTree = "<group>"; };
@@ -107,6 +112,9 @@
 		9042B99822329B2B00629824 /* rng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rng.cpp; sourceTree = "<group>"; };
 		9042B99922329B2B00629824 /* slotallocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = slotallocator.h; sourceTree = "<group>"; };
 		9042B99A22329B2B00629824 /* moveedgechange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveedgechange.cpp; sourceTree = "<group>"; };
+		90B57A90225FB4D300E76965 /* libiomp5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiomp5.dylib; path = ../../../../../../../../usr/local/Cellar/llvm/8.0.0/lib/libiomp5.dylib; sourceTree = "<group>"; };
+		90B57A922278C42900E76965 /* moveremedgeMAIS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = moveremedgeMAIS.cpp; sourceTree = "<group>"; };
+		90B57A932278C42900E76965 /* moveremedgeMAIS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = moveremedgeMAIS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90B57A91225FB4D300E76965 /* libiomp5.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +134,7 @@
 			children = (
 				9042B95A22329B0200629824 /* ClonOr_cpp */,
 				9042B95922329B0200629824 /* Products */,
+				90B57A8F225FB4D300E76965 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -166,6 +176,8 @@
 				9042B97D22329B2700629824 /* moveremedge.cpp */,
 				9042B96422329B2400629824 /* moveremedge.h */,
 				9042B97A22329B2600629824 /* moveremedgeAIS.cpp */,
+				90B57A922278C42900E76965 /* moveremedgeMAIS.cpp */,
+				90B57A932278C42900E76965 /* moveremedgeMAIS.h */,
 				9042B96622329B2500629824 /* moveremedgeAIS.h */,
 				9042B99322329B2A00629824 /* moverho.cpp */,
 				9042B98322329B2800629824 /* moverho.h */,
@@ -186,6 +198,8 @@
 				9042B96F22329B2500629824 /* recedge.cpp */,
 				9042B98422329B2800629824 /* recedge.h */,
 				9042B99522329B2B00629824 /* rectree.cpp */,
+				9010C23E22B0334200B8827E /* rectreeAux.cpp */,
+				9010C23F22B0334200B8827E /* rectreeAux.h */,
 				9042B98922329B2900629824 /* rectree.h */,
 				9042B99822329B2B00629824 /* rng.cpp */,
 				9042B98722329B2900629824 /* rng.h */,
@@ -198,6 +212,14 @@
 				9042B99422329B2B00629824 /* weakarg.h */,
 			);
 			path = ClonOr_cpp;
+			sourceTree = "<group>";
+		};
+		90B57A8F225FB4D300E76965 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				90B57A90225FB4D300E76965 /* libiomp5.dylib */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,6 +262,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 9042B94F22329B0200629824;
 			productRefGroup = 9042B95922329B0200629824 /* Products */;
@@ -274,6 +297,7 @@
 				9042B9A822329B2C00629824 /* mpiutils.cpp in Sources */,
 				9042B9A322329B2C00629824 /* moveaddedgeAIS.cpp in Sources */,
 				9042B9B122329B2C00629824 /* rectree.cpp in Sources */,
+				90B57A942278C42900E76965 /* moveremedgeMAIS.cpp in Sources */,
 				9042B9AD22329B2C00629824 /* tree.cpp in Sources */,
 				9042B9AA22329B2C00629824 /* weakarg.cpp in Sources */,
 				9042B9AC22329B2C00629824 /* moveageclonal.cpp in Sources */,
@@ -283,6 +307,7 @@
 				9042B9A422329B2C00629824 /* wargxml.cpp in Sources */,
 				9042B9B022329B2C00629824 /* moverho.cpp in Sources */,
 				9042B9AE22329B2C00629824 /* param.cpp in Sources */,
+				9010C24022B0334200B8827E /* rectreeAux.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,11 +318,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = /usr/local/opt/llvm/bin/clang;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -340,9 +366,21 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/;",
+					/usr/local/opt/llvm/lib/clang/8.0.0/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/bin/clang;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-fopenmp";
+				OTHER_LDFLAGS = (
+					"-I/usr/local/include",
+					"-L/usr/local/lib",
+					"-lgsl",
+					"-lgslcblas",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -351,11 +389,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = /usr/local/opt/llvm/bin/clang;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -392,8 +431,20 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/;",
+					/usr/local/opt/llvm/lib/clang/8.0.0/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/bin/clang;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "-fopenmp";
+				OTHER_LDFLAGS = (
+					"-I/usr/local/include",
+					"-L/usr/local/lib",
+					"-lgsl",
+					"-lgslcblas",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -401,8 +452,16 @@
 		9042B96022329B0200629824 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CC = /usr/local/opt/llvm/bin/clang;
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = /usr/local/include/;
+				COMPILER_INDEX_STORE_ENABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					/usr/local/opt/llvm/lib/clang/8.0.0/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/lib;
+				OTHER_CFLAGS = "-fopenmp";
 				OTHER_LDFLAGS = (
 					"-I/usr/local/include",
 					"-L/usr/local/lib",
@@ -416,8 +475,16 @@
 		9042B96122329B0200629824 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CC = /usr/local/opt/llvm/bin/clang;
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = /usr/local/include/;
+				COMPILER_INDEX_STORE_ENABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					/usr/local/opt/llvm/lib/clang/8.0.0/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/lib;
+				OTHER_CFLAGS = "-fopenmp";
 				OTHER_LDFLAGS = (
 					"-I/usr/local/include",
 					"-L/usr/local/lib",
