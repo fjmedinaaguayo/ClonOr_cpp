@@ -19,12 +19,12 @@ namespace weakarg
         name= "AddEdge";
     }
     
-    double MoveAddEdgeAIS::gammaAIS(int t, int T_AIS){
+    double MoveAddEdgeAIS::gammaAIS(int t){
         
         if(t==0)
             return 0;
         
-        double result=pow((t+0.0)/T_AIS ,5);
+        double result=pow((t+0.0)/param->getT_AIS() , param->getgamma_AIS());
         return(result);
     }
     
@@ -78,9 +78,9 @@ namespace weakarg
             l1=param->getLL();
             
             if(t==0)
-                lratio+=(gammaAIS(t+1,T_AIS)-gammaAIS(t,T_AIS))*l1-l0+log(param->getRho()*rectree->getTTotal()/2.0/rectree->numRecEdge());
+                lratio+=(gammaAIS(t+1)-gammaAIS(t))*l1-l0+log(param->getRho()*rectree->getTTotal()/2.0/rectree->numRecEdge());
             else
-                lratio+=(gammaAIS(t+1,T_AIS)-gammaAIS(t,T_AIS))*l1;
+                lratio+=(gammaAIS(t+1)-gammaAIS(t))*l1;
             
             if(lratio<lu){
                 break;
@@ -122,7 +122,7 @@ namespace weakarg
                 param->computeLikelihood(start2,end2);
                 l2=param->getLL();
                 
-                if (log(gsl_rng_uniform(rng))>(l2-l1)*(gammaAIS(t+1,T_AIS))){
+                if (log(gsl_rng_uniform(rng))>(l2-l1)*(gammaAIS(t+1))){
                     
                     param->getRecTree()->remRecEdge(which2);
                     for (unsigned int i=start2;i<end2;i++)
