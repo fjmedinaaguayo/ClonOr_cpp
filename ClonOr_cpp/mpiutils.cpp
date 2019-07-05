@@ -107,7 +107,7 @@ mpiofstream::mpiofstream(const std::string& fname) :
 	fname(fname)
 {
     ofstream outputFile;
-    outputFile.open(fname, ios::out|ios::app);
+    outputFile.open(fname, std::ofstream::out | std::ofstream::app);
     
     //FMA_CHANGES: If file exists append
     if(outputFile.fail()){
