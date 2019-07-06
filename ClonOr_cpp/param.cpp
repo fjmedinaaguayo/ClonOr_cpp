@@ -202,10 +202,8 @@ void Param::metropolis(string comment, int lastIterNum)
     else
     	csv = new nullstream();
 
-    if(!output.fileExists){
-        exportXMLbegin(output(true),comment);
-        output.flush();
-    }
+    exportXMLbegin(output(true),comment);
+    output.flush();
     startDiagnostics(*csv);
 
     computeLikelihood();
