@@ -919,6 +919,39 @@ double RecTree::priorEdge(int e,Param * param) const
     return(ret);
 }
 
+    double RecTree::priorEdge(RecEdge* recedge0,Param * param) const
+    {
+        double timeFrom=recedge0->timeFrom+param->getRecTree()->getNode(recedge0->edgeFrom)->getAge();
+        double timeTo=recedge0->timeTo+param->getRecTree()->getNode(recedge0->edgeTo)->getAge();
+        double L=0.0;
+        for (unsigned int i=n;i<nodes.size();i++)
+        {
+            if (timeFrom<nodes[i-1]->getAge() || timeTo>nodes[i]->getAge())
+                continue;
+            L+=(2*n-i)*(min(timeFrom,nodes[i]->getAge())-max(timeTo,nodes[i-1]->getAge()));
+            if (timeFrom<nodes[i]->getAge())
+                break;
+        }
+        if (timeFrom>nodes.back()->getAge())
+            L+=timeFrom-nodes.back()->getAge();
+        double ret=-L;
+        int x=recedge0->getStart();
+        int y=recedge0->getEnd();
+        bool xatborder=false,yatborder=false;
+        vector<int>*blocks=param->getData()->getBlocks();
+        for (unsigned int i=0;i<blocks->size();i++) {
+            if (blocks->at(i)==x) xatborder=true;
+            if (blocks->at(i)==y) yatborder=true;
+        }
+        int b=blocks->size()-1;
+        int length=blocks->back();
+        double delta=param->getDelta();
+        if (xatborder) ret+=log(delta/(b*delta+length-b)); else ret+=log(1.0/(b*delta+length-b));
+        if (yatborder) ret+=(y-x+1)*log(1.0-1.0/delta); else ret+=(y-x)*log(1.0-1.0/delta)-log(delta);
+        return(ret);
+    }
+
+    
 double RecTree::priorEdge(double tFrom,double tTo) const
 {
     double L=0.0;

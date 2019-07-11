@@ -20,13 +20,20 @@ namespace weakarg
         
     }
     
-    double MoveRemEdgeAIS::gammaAIS(int t){
+    double MoveRemEdgeAIS::gammaAIS(int t, int up){
         
         if(t==0)
             return 0;
+        else if(param->getT_AIS()==1 && t==1)
+            return 1;
         
-        double result=1-pow(1-(t+0.0)/param->getT_AIS() ,param->getgamma_AIS());
-        return(result);
+        double result;
+        if(up==1)
+            result=pow((t+0.0)/param->getT_AIS() ,param->getgamma_AIS());
+        else
+            result=1-pow(1-(t+0.0)/param->getT_AIS() ,param->getgamma_AIS());
+
+        return result;
     }
     
     int MoveRemEdgeAIS::move(vector<int> * samplespace)
@@ -76,9 +83,9 @@ namespace weakarg
                 for(int t=0; t<T; t++){
                     
                     if(t==0)
-                        lratio[0]=l0-(gammaAIS(t+1)-gammaAIS(t))*ll[n]+log((1.0+rectree0->numRecEdge())*2.0/param->getRho()/rectree0->getTTotal());
+                        lratio[0]=l0-(gammaAIS(t+1,0)-gammaAIS(t,0))*ll[n]+log((1.0+rectree0->numRecEdge())*2.0/param->getRho()/rectree0->getTTotal());
                     else
-                        lratio[n]+=-(gammaAIS(t+1)-gammaAIS(t))*ll[n];
+                        lratio[n]+=-(gammaAIS(t+1,0)-gammaAIS(t,0))*ll[n];
                     
                     if(lu<=lratio[n]){
                         break;
@@ -117,7 +124,7 @@ namespace weakarg
                         
                         ll_Temp=l0-ll0_partial_Temp+ll_partial_Temp;
                         
-                        if (log(gsl_rng_uniform(rng))<=(ll_Temp-ll[n])*(1-gammaAIS(t+1))){
+                        if (log(gsl_rng_uniform(rng))<=(ll_Temp-ll[n])*gammaAIS(t+1,0)){
                             
                             dlog(1)<<"AISRJ t="<<t<<" out of "<<T<<"..."<<"MCMC in AIS Accepted!"<<endl;
                             ll[n]=ll_Temp;
@@ -129,7 +136,7 @@ namespace weakarg
         }
         
         numcalls++;
-        dlog(1)<<"Proposing to remove edge via MAISRJ "<<efrom[0]<<":"<<tfrom[0]<<"->"<<eto[0]<<":"<<tto[0]<<"...";
+        dlog(1)<<"Proposing to remove edge via AISRJ "<<efrom[0]<<":"<<tfrom[0]<<"->"<<eto[0]<<":"<<tto[0]<<"...";
         
         if (lu>lratio[0])
         {

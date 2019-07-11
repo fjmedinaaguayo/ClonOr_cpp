@@ -30,6 +30,7 @@ namespace weakarg
         double logSumExp(vector<double> x);
         vector<int> syst_resamp(vector<double> lw, int N);
         int mult_resamp(vector<double> lw);
+        int moveWithinAIS(int t, RecTreeAux* rectreeAux, vector<double> store_ll, double* ll);
         inline int move(){return(move(NULL));}
         ~MoveAddEdgeMAIS();
         
