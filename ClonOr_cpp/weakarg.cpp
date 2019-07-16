@@ -13,6 +13,7 @@
 #include "mpiutils.h"
 #include "weakarg.h"
 #include "wargxml.h"
+#include <sstream>
 
 using namespace std;
 namespace weakarg
@@ -289,6 +290,16 @@ try{
 	opt().temperreps=temperreps;
 	p.readProgramOptions();
     }else if(!readparams) p.readProgramOptions();
+    
+    ///FMA_CHANGES: For including specifications to filename
+    std::string extendedFilename=opt().outfile;
+    extendedFilename=extendedFilename.substr(0,opt().outfile.length()-4);
+    extendedFilename+="_gamma"+std::to_string(round(p.getgamma_AIS()* 100)/100).substr(0,4);
+    extendedFilename+="_T"+std::to_string((int) p.getT_AIS());
+    extendedFilename+="_N"+std::to_string((int) p.getN_MAIS());
+    extendedFilename+=opt().outfile.substr(opt().outfile.length()-4,opt().outfile.length());
+    opt().outfile=extendedFilename;
+    
     cout<<"Starting Metropolis-Hastings algorithm............."<<endl;
     p.metropolis(comment, lastIterNum);
 

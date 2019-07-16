@@ -19,7 +19,7 @@ int mpinodecount;
 std::string logfilename;
 
 #ifdef WEAKARG_MPI
-
+    
 void initmpi( int argc, char** argv )
 {
 	// Set up the MPI environment
@@ -106,11 +106,10 @@ ostream& dlog()
 mpiofstream::mpiofstream(const std::string& fname) :
 	fname(fname)
 {
-    ofstream outputFile;
-    outputFile.open(fname.c_str(), std::ofstream::out | std::ofstream::app);
+    ifstream infile(fname.c_str());
     
     //FMA_CHANGES: If file exists append
-    if(outputFile.fail()){
+    if(!infile.good()){
         file = new ofstream(fname.c_str());
         fileExists=false;
     }
@@ -119,9 +118,8 @@ mpiofstream::mpiofstream(const std::string& fname) :
         fileExists=true;
         
     }
-    
-        
 }
+    
 void mpiofstream::flush()
 {
 	*file << ss.str();

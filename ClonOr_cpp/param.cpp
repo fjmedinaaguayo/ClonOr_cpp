@@ -17,6 +17,7 @@
 #include "movescaletree.h"
 #include "moveregraftclonal.h"
 #include "movegreedytree.h"
+#include "moveWithinAIS.h"
 #include <omp.h>
 
 
@@ -202,8 +203,10 @@ void Param::metropolis(string comment, int lastIterNum)
     else
     	csv = new nullstream();
 
-    exportXMLbegin(output(true),comment);
-    output.flush();
+    if(!output.fileExists){
+        exportXMLbegin(output(true),comment);
+        output.flush();
+    }
     startDiagnostics(*csv);
 
     computeLikelihood();
