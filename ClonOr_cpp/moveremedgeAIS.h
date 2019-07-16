@@ -26,7 +26,7 @@ namespace weakarg
             return new MoveRemEdgeAIS(*this);
         }
         int move(vector<int> * samplespace=NULL);
-        double gammaAIS(int t);
+        double gammaAIS(int t, int up);
         inline int move(){return(move(NULL));}
         ~MoveRemEdgeAIS();
         

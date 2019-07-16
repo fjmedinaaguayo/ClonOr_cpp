@@ -22,15 +22,6 @@ namespace weakarg
         name= "RemEdge";
     }
     
-    double MoveRemEdgeMAIS::gammaAIS(int t){
-        
-        if(t==0)
-            return 0;
-        
-        double result=1-pow(1-(t+0.0)/param->getT_AIS() ,param->getgamma_AIS());
-        return(result);
-    }
-    
     double MoveRemEdgeMAIS::logSumExp(vector<double> x){
         
         double result=0;
@@ -144,16 +135,7 @@ namespace weakarg
         
         double l0=param->getLL(), lu=log(gsl_rng_uniform(rng)), lratio_avg=0;
         
-        //#pragma omp parallel num_threads(n_threads)
-        {
-            
-            //int id = omp_get_thread_num();
-            //int total = omp_get_num_threads();
-            
-            //for(int i=0; i<N/n_threads; i++){
-            //int n=i+id*N/n_threads;
-            
-        }
+        MoveWithinAIS moveAIS(T, param->getgamma_AIS());
         
         #pragma omp parallel for
         for(int n=0; n<N; n++){
@@ -161,51 +143,18 @@ namespace weakarg
             int nThreads=omp_get_num_threads();
             if(n==0){
                 
+                param->getRectreeAux_vec()[n]->setAll(start[0],end[0],tfrom[0],tto[0],efrom[0],eto[0]);
+                
                 for(int t=0; t<T; t++){
                     
                     if(t==0)
-                        lratio[0]=l0-(gammaAIS(t+1)-gammaAIS(t))*ll[n]+log((1.0+rectree0->numRecEdge())*2.0/param->getRho()/rectree0->getTTotal());
-                    else
-                        lratio[n]+=-(gammaAIS(t+1)-gammaAIS(t))*ll[n];
+                        lratio[0]=l0+log((1.0+rectree0->numRecEdge())*2.0/param->getRho()/rectree0->getTTotal());
+                        
+                    lratio[n]-=(1-moveAIS.gammaAIS(T-t-1)-(1-moveAIS.gammaAIS(T-t)))*ll[n];
                     
                     if(t!=T-1){
-                        
-                        double tfrom_Temp,tto_Temp;
-                        unsigned int start_Temp, end_Temp;
-                        unsigned int efrom_Temp, eto_Temp;
-                        vector<double> store_ll0_Temp;
-                        vector<double> store_ll_Temp;
-                        double ll_Temp;
-                        
-                        //Draw start and end
-                        param->getRectreeAux_vec()[n]->rectree0->setBlock(&start_Temp,&end_Temp,param->getDelta(),param->getData()->getBlocks());
-                        
-                        //Draw eto and tto
-                        eto_Temp=param->getRectreeAux_vec()[n]->rectree0->getPoint(&tto_Temp);
-                        
-                        //Draw efrom and tfrom
-                        tfrom_Temp=tto_Temp+param->getRectreeAux_vec()[n]->rectree0->getNode(eto_Temp)->getAge();
-                        efrom_Temp=param->getRectreeAux_vec()[n]->rectree0->getEdgeCoal(&tfrom_Temp);
-                        tfrom_Temp-=param->getRectreeAux_vec()[n]->rectree0->getNode(efrom_Temp)->getAge();
-                        
-                        param->getRectreeAux_vec()[n]->setAll(start_Temp,end_Temp,tfrom_Temp,tto_Temp,efrom_Temp,eto_Temp);
-                        store_ll0_Temp=vector<double>(end_Temp-start_Temp);
-                        
-                        double ll_partial_Temp=param->getRectreeAux_vec()[n]->computePartialLL(param->getTheta());
-                        double ll0_partial_Temp=0;
-                        for (unsigned int i=start_Temp;i<end_Temp;i++){
-                            store_ll0_Temp[i-start_Temp]=param->getLLsite(i);
-                            ll0_partial_Temp+=store_ll0_Temp[i-start_Temp];
-                        }
-                        store_ll_Temp=param->getRectreeAux_vec()[n]->store_ll;
-                        
-                        ll_Temp=l0-ll0_partial_Temp+ll_partial_Temp;
-                        
-                        if (log(gsl_rng_uniform(rng))<=(ll_Temp-ll[n])*(1-gammaAIS(t+1))){
-                            
-                            dlog(1)<<"AISRJ t="<<t<<" out of "<<T<<"..."<<"MCMC in AIS Accepted!"<<endl;
-                            ll[n]=ll_Temp;
-                        }
+
+                        int accep=moveAIS.moveFwd(T-t-1, param, param->getRectreeAux_vec()[n], &ll[n]);
                     }
                 }
                 
@@ -239,60 +188,29 @@ namespace weakarg
                 
                 while(t<T){
                     
-                    if(t==0) lratio[n]+=(gammaAIS(t+1)-gammaAIS(t))*ll[n]-l0+log(param->getRho()*rectree0->getTTotal()/2.0/(rectree0->numRecEdge()+1));
-                    else
-                        lratio[n]+=(gammaAIS(t+1)-gammaAIS(t))*ll[n];
+                    if(t==0)
+                        lratio[n]=-l0+log(param->getRho()*rectree0->getTTotal()/2.0/(rectree0->numRecEdge()+1));
+                        
+                        lratio[n]+=(moveAIS.gammaAIS(t+1)-moveAIS.gammaAIS(t))*ll[n];
                     
                     if(t!=T-1){
+
+                        int accep=moveAIS.moveFwd(t+1, param, param->getRectreeAux_vec()[n], &ll[n]);
                         
-                        double tfrom_Temp,tto_Temp;
-                        unsigned int start_Temp, end_Temp;
-                        unsigned int efrom_Temp, eto_Temp;
-                        vector<double> store_ll0_Temp;
-                        vector<double> store_ll_Temp;
-                        double ll_Temp;
-                        
-                        //Draw start and end
-                        param->getRectreeAux_vec()[n]->rectree0->setBlock(&start_Temp,&end_Temp,param->getDelta(),param->getData()->getBlocks());
-                        
-                        //Draw eto and tto
-                        eto_Temp=param->getRectreeAux_vec()[n]->rectree0->getPoint(&tto_Temp);
-                        
-                        //Draw efrom and tfrom
-                        tfrom_Temp=tto_Temp+param->getRectreeAux_vec()[n]->rectree0->getNode(eto_Temp)->getAge();
-                        efrom_Temp=param->getRectreeAux_vec()[n]->rectree0->getEdgeCoal(&tfrom_Temp);
-                        tfrom_Temp-=param->getRectreeAux_vec()[n]->rectree0->getNode(efrom_Temp)->getAge();
-                        
-                        param->getRectreeAux_vec()[n]->setAll(start_Temp,end_Temp,tfrom_Temp,tto_Temp,efrom_Temp,eto_Temp);
-                        store_ll0_Temp=vector<double>(end_Temp-start_Temp);
-                        
-                        double ll_partial_Temp=param->getRectreeAux_vec()[n]->computePartialLL(param->getTheta());
-                        double ll0_partial_Temp=0;
-                        for (unsigned int i=start_Temp;i<end_Temp;i++){
-                            store_ll0_Temp[i-start_Temp]=param->getLLsite(i);
-                            ll0_partial_Temp+=store_ll0_Temp[i-start_Temp];
-                        }
-                        store_ll_Temp=param->getRectreeAux_vec()[n]->store_ll;
-                        
-                        ll_Temp=l0-ll0_partial_Temp+ll_partial_Temp;
-                        
-                        if (log(gsl_rng_uniform(rng))<=(ll_Temp-ll[n])*(gammaAIS(t+1))){
+                        if(accep!=0){
                             
-                            dlog(1)<<"AISRJ t="<<t<<" out of "<<T<<"..."<<"MCMC in AIS Accepted!"<<endl;
-                            tfrom[n]=tfrom_Temp;
-                            tto[n]=tto_Temp;
-                            start[n]=start_Temp;
-                            end[n]=end_Temp;
-                            efrom[n]=efrom_Temp;
-                            eto[n]=eto_Temp;
-                            ll[n]=ll_Temp;
+                            store_ll[n]=param->getRectreeAux_vec()[n]->store_ll;
                             
-                            store_ll[n]=store_ll_Temp;
-                            store_ll0[n]=store_ll0_Temp;
+                            tfrom[n]=param->getRectreeAux_vec()[n]->tfrom;
+                            tto[n]=param->getRectreeAux_vec()[n]->tto;
+                            start[n]=param->getRectreeAux_vec()[n]->start;
+                            end[n]=param->getRectreeAux_vec()[n]->end;
+                            efrom[n]=param->getRectreeAux_vec()[n]->efrom;
+                            eto[n]=param->getRectreeAux_vec()[n]->eto;
+                            
                         }
                     }
                     t++;
-                    
                 }
             }
         }
@@ -312,7 +230,7 @@ namespace weakarg
             dlog(1)<<"Rejected!"<<endl;
             
             which[0]=rectree0->addRecEdge_FMA(tfrom[0],tto[0],start[0],end[0],efrom[0],eto[0]);
-            //param->computeLikelihood(start[0],end[0]);
+            //param->computeLikelihood();
             //l=param->getLL();
             
             for (unsigned int i=start[0];i<end[0];i++)

@@ -77,7 +77,8 @@ public:
     void setBlock(unsigned int* gstart,unsigned int* gend,double delta,std::vector<int> *blocks);///<Sets the start and end positions of a recombinant block based on geometric distribution and independent blocks
     int getEdgeCoal(double* time);///<Returns the node the recombinant edge is from and sets the time
 // Part of the likelihood/prior calculation:
-    double priorEdge(int e,Param * param) const;///<Returns the LOG prior of a given edge
+    double priorEdge(int e,Param * param) const;///<Returns the LOG prior of a given edge number in rectree
+    double priorEdge(RecEdge* edge0,Param * param) const;///FMA_CHANGES: Computes prior of edge not in rectree
     double priorEdge(double tFrom,double tTo) const;///<Returns the UNLOGGED prior of a given edge
     double prior(Param * param) const;///<Returns the value of the prior function
 

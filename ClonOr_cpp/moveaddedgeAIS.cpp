@@ -23,9 +23,11 @@ namespace weakarg
         
         if(t==0)
             return 0;
+        else if(param->getT_AIS()==1 && t==1)
+            return 1;
         
         double result=pow((t+0.0)/param->getT_AIS() , param->getgamma_AIS());
-        return(result);
+        return result;
     }
     
     int MoveAddEdgeAIS::move(vector<int> * samplespace)

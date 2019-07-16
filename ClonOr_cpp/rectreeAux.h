@@ -14,8 +14,6 @@
 #include <cmath>
 #define LOG025 -1.38629461
 
-#endif /* rectreeAux_h */
-
 namespace weakarg
 {
     
@@ -45,3 +43,5 @@ public:
 };
 
 }
+
+#endif /* rectreeAux_h */

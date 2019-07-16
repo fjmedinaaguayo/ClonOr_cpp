@@ -10,6 +10,7 @@
 #define moveremedgeMAIS_h
 
 #include "move.h"
+#include "moveWithinAIS.h"
 
 namespace weakarg
 {
@@ -26,13 +27,11 @@ namespace weakarg
             return new MoveRemEdgeMAIS(*this);
         }
         int move(vector<int> * samplespace=NULL);
-        double gammaAIS(int t);
         double logSumExp(vector<double> x);
         vector<int> syst_resamp(vector<double> lw, int N);
         int mult_resamp(vector<double> lw);
         inline int move(){return(move(NULL));}
         ~MoveRemEdgeMAIS();
-        
     };
     
 } // end namespace weakarg

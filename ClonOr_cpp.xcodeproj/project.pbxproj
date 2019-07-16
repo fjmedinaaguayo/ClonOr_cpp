@@ -37,6 +37,7 @@
 		9042B9B522329B2C00629824 /* moveedgechange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9042B99A22329B2B00629824 /* moveedgechange.cpp */; };
 		90B57A91225FB4D300E76965 /* libiomp5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B57A90225FB4D300E76965 /* libiomp5.dylib */; };
 		90B57A942278C42900E76965 /* moveremedgeMAIS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90B57A922278C42900E76965 /* moveremedgeMAIS.cpp */; };
+		90FE78DC22D7617900BA4E08 /* moveWithinAIS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 90FE78DA22D7617900BA4E08 /* moveWithinAIS.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -115,6 +116,8 @@
 		90B57A90225FB4D300E76965 /* libiomp5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiomp5.dylib; path = ../../../../../../../../usr/local/Cellar/llvm/8.0.0/lib/libiomp5.dylib; sourceTree = "<group>"; };
 		90B57A922278C42900E76965 /* moveremedgeMAIS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = moveremedgeMAIS.cpp; sourceTree = "<group>"; };
 		90B57A932278C42900E76965 /* moveremedgeMAIS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = moveremedgeMAIS.h; sourceTree = "<group>"; };
+		90FE78DA22D7617900BA4E08 /* moveWithinAIS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = moveWithinAIS.cpp; sourceTree = "<group>"; };
+		90FE78DB22D7617900BA4E08 /* moveWithinAIS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = moveWithinAIS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +161,8 @@
 				9042B96D22329B2500629824 /* move.cpp */,
 				9042B97F22329B2700629824 /* move.h */,
 				9042B96B22329B2500629824 /* moveaddedge.cpp */,
+				90FE78DA22D7617900BA4E08 /* moveWithinAIS.cpp */,
+				90FE78DB22D7617900BA4E08 /* moveWithinAIS.h */,
 				9042B99022329B2A00629824 /* moveaddedge.h */,
 				9042B97122329B2500629824 /* moveaddedgeAIS.cpp */,
 				9042B98822329B2900629824 /* moveaddedgeAIS.h */,
@@ -308,6 +313,7 @@
 				9042B9B022329B2C00629824 /* moverho.cpp in Sources */,
 				9042B9AE22329B2C00629824 /* param.cpp in Sources */,
 				9010C24022B0334200B8827E /* rectreeAux.cpp in Sources */,
+				90FE78DC22D7617900BA4E08 /* moveWithinAIS.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
