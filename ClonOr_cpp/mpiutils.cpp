@@ -19,7 +19,7 @@ int mpinodecount;
 std::string logfilename;
 
 #ifdef WEAKARG_MPI
-    
+
 void initmpi( int argc, char** argv )
 {
 	// Set up the MPI environment
@@ -118,6 +118,8 @@ mpiofstream::mpiofstream(const std::string& fname) :
         fileExists=true;
         
     }
+    
+        
 }
     
 void mpiofstream::flush()

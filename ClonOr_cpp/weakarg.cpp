@@ -48,6 +48,14 @@ void printVersion(){
 	cout<<getVersion()<<endl;
 }
 
+template <typename T>
+std::string ToString(T val)
+{
+    std::stringstream stream;
+    stream << val;
+    return stream.str();
+}
+
 using namespace weakarg;
 // main function goes outside the weakarg namespace so that
 // the linker can find it
@@ -294,9 +302,9 @@ try{
     ///FMA_CHANGES: For including specifications to filename
     std::string extendedFilename=opt().outfile;
     extendedFilename=extendedFilename.substr(0,opt().outfile.length()-4);
-    extendedFilename+="_gamma"+std::to_string(round(p.getgamma_AIS()* 100)/100).substr(0,4);
-    extendedFilename+="_T"+std::to_string((int) p.getT_AIS());
-    extendedFilename+="_N"+std::to_string((int) p.getN_MAIS());
+    extendedFilename+="_gamma"+ ToString(round(p.getgamma_AIS()* 100)/100).substr(0,4);
+    extendedFilename+="_T"+ToString((int) p.getT_AIS());
+    extendedFilename+="_N"+ToString((int) p.getN_MAIS());
     extendedFilename+=opt().outfile.substr(opt().outfile.length()-4,opt().outfile.length());
     opt().outfile=extendedFilename;
     
